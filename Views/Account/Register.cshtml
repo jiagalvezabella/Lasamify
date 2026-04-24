@@ -1,0 +1,53 @@
+@model Lasamify.Models.RegisterViewModel
+@{
+    ViewData["Title"] = "Sign Up";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-5">
+        <div class="card shadow">
+            <div class="card-header bg-dark text-white text-center py-3">
+                <h4 class="mb-0"><i class="fa-solid fa-store text-warning me-2"></i>Create Account</h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="post" asp-controller="Account" asp-action="Register">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" style="display:@(ViewData.ModelState.ErrorCount > 0 ? "block" : "none")"></div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Username</label>
+                        <input asp-for="Username" class="form-control" placeholder="juandelacruz" />
+                        <span asp-validation-for="Username" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Email</label>
+                        <input asp-for="Email" class="form-control" placeholder="your@email.com" />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Password</label>
+                        <input asp-for="Password" class="form-control" placeholder="Min. 6 characters" />
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Confirm Password</label>
+                        <input asp-for="ConfirmPassword" class="form-control" placeholder="Re-enter password" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">I am a...</label>
+                        <select asp-for="Role" class="form-select">
+                            <option value="Buyer">Buyer</option>
+                            <option value="Seller">Seller</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-warning w-100 fw-bold">Create Account</button>
+                </form>
+                <hr />
+                <p class="text-center mb-0">
+                    Already have an account? <a asp-controller="Account" asp-action="Login">Login</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

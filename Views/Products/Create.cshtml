@@ -1,0 +1,65 @@
+@model Lasamify.Models.CreateProductViewModel
+@{
+    ViewData["Title"] = "List a Product";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card shadow-sm">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0"><i class="fa-solid fa-tag me-2"></i>List a Product for Sale</h5>
+            </div>
+            <div class="card-body p-4">
+                <form method="post" enctype="multipart/form-data" asp-controller="Products" asp-action="Create">
+                    @Html.AntiForgeryToken()
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Product Name *</label>
+                        <input asp-for="Name" class="form-control" placeholder="e.g. iPhone 13 Pro" />
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Description</label>
+                        <textarea asp-for="Description" class="form-control" rows="3"
+                                  placeholder="Describe your product..."></textarea>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col">
+                            <label class="form-label fw-semibold">Price (₱) *</label>
+                            <input asp-for="Price" class="form-control" type="number" step="0.01" min="0.01" />
+                            <span asp-validation-for="Price" class="text-danger small"></span>
+                        </div>
+                        <div class="col">
+                            <label class="form-label fw-semibold">Stock *</label>
+                            <input asp-for="Stock" class="form-control" type="number" min="1" />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Category</label>
+                        <select asp-for="Category" class="form-select">
+                            <option>General</option>
+                            <option>Electronics</option>
+                            <option>Clothing</option>
+                            <option>Food</option>
+                            <option>Books</option>
+                            <option>Services</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Product Image</label>
+                        <input asp-for="Image" type="file" class="form-control" accept="image/*" />
+                        <small class="text-muted">JPG, PNG, GIF, WEBP allowed</small>
+                    </div>
+
+                    <button type="submit" class="btn btn-warning w-100 fw-bold">
+                        <i class="fa-solid fa-upload me-2"></i>List Product
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

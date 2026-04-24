@@ -1,0 +1,21 @@
+## .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+
+## SQLite DB (local only)
+*.db
+*.db-shm
+*.db-wal
+
+## Uploaded files (don't commit user uploads)
+wwwroot/images/uploads/
+
+## Environment
+appsettings.Development.json
+
+## OS
+.DS_Store
+Thumbs.db

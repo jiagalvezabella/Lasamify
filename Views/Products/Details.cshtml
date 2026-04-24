@@ -1,0 +1,70 @@
+@model Lasamify.Models.Product
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Marketplace</a></li>
+        <li class="breadcrumb-item active">@Model.Name</li>
+    </ol>
+</nav>
+
+<div class="row g-4">
+    <!-- Product Image -->
+    <div class="col-md-5">
+        @if (!string.IsNullOrEmpty(Model.ImagePath))
+        {
+            <img src="@Model.ImagePath" class="img-fluid rounded-3 shadow" alt="@Model.Name" />
+        }
+        else
+        {
+            <div class="bg-light rounded-3 d-flex align-items-center justify-content-center shadow" style="height:350px">
+                <i class="fa-solid fa-image fa-5x text-secondary"></i>
+            </div>
+        }
+    </div>
+
+    <!-- Product Info -->
+    <div class="col-md-7">
+        <span class="badge bg-secondary mb-2">@Model.Category</span>
+        <h2 class="fw-bold mb-1">@Model.Name</h2>
+        <p class="text-muted mb-3">Sold by <strong>@Model.Seller?.Username</strong></p>
+
+        <p class="fs-2 fw-bold text-success mb-3">₱@Model.Price.ToString("N2")</p>
+
+        <p class="lead mb-4">@Model.Description</p>
+
+        <div class="mb-3">
+            <span class="@(Model.Stock > 0 ? "text-success" : "text-danger") fw-semibold">
+                <i class="fa-solid fa-box me-1"></i>
+                @(Model.Stock > 0 ? $"{Model.Stock} in stock" : "Out of stock")
+            </span>
+        </div>
+
+        @if (User.Identity?.IsAuthenticated == true && Model.IsAvailable && Model.Stock > 0)
+        {
+            <form method="post" asp-controller="Products" asp-action="Buy" asp-route-id="@Model.Id">
+                @Html.AntiForgeryToken()
+                <div class="d-flex gap-3 align-items-center mb-3">
+                    <label class="fw-semibold">Qty:</label>
+                    <input type="number" name="quantity" value="1" min="1" max="@Model.Stock"
+                           class="form-control" style="width:80px" />
+                    <button type="submit" class="btn btn-warning btn-lg px-4">
+                        <i class="fa-solid fa-cart-shopping me-2"></i>Buy Now
+                    </button>
+                </div>
+            </form>
+        }
+        else if (User.Identity?.IsAuthenticated != true)
+        {
+            <a asp-controller="Account" asp-action="Login" class="btn btn-warning btn-lg px-4">
+                <i class="fa-solid fa-right-to-bracket me-2"></i>Login to Buy
+            </a>
+        }
+
+        <div class="mt-4 text-muted small">
+            <i class="fa-solid fa-clock me-1"></i>Listed on @Model.CreatedAt.ToString("MMMM dd, yyyy")
+        </div>
+    </div>
+</div>

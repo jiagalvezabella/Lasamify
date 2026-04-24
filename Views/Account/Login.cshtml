@@ -1,0 +1,38 @@
+@model Lasamify.Models.LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-5">
+        <div class="card shadow">
+            <div class="card-header bg-dark text-white text-center py-3">
+                <h4 class="mb-0"><i class="fa-solid fa-store text-warning me-2"></i>Lasamify Login</h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="post" asp-controller="Account" asp-action="Login">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="All" class="alert alert-danger" style="display:@(ViewData.ModelState.ErrorCount > 0 ? "block" : "none")"></div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Email</label>
+                        <input asp-for="Email" class="form-control" placeholder="your@email.com" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Password</label>
+                        <input asp-for="Password" class="form-control" placeholder="••••••" />
+                    </div>
+                    <div class="form-check mb-3">
+                        <input asp-for="RememberMe" class="form-check-input" />
+                        <label class="form-check-label">Remember me</label>
+                    </div>
+                    <button type="submit" class="btn btn-warning w-100 fw-bold">Login</button>
+                </form>
+                <hr />
+                <p class="text-center mb-0">
+                    No account? <a asp-controller="Account" asp-action="Register">Sign up here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,251 @@
+@model Lasamify.Models.ProductSearchViewModel
+@{
+    ViewData["Title"] = "Marketplace";
+}
+
+<style>
+    :root {
+        --gold: #e8b84b;
+        --gold-light: #f5d68a;
+        --cream: #f0ece0;
+        --dark: #0d0d0d;
+        --dark2: #161616;
+        --dark3: #1e1e1e;
+    }
+
+    body {
+        background: var(--dark);
+        color: var(--cream);
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    .search-wrapper {
+        background: var(--dark2);
+        border: 0.5px solid rgba(232,184,75,0.2);
+        border-radius: 8px;
+        padding: 1.5rem 2rem;
+        margin-bottom: 2rem;
+    }
+    .search-wrapper .form-control {
+        background: var(--dark3);
+        border: 0.5px solid rgba(232,184,75,0.2);
+        color: var(--cream);
+        border-radius: 6px;
+    }
+    .search-wrapper .form-control:focus {
+        background: var(--dark3);
+        border-color: var(--gold);
+        color: var(--cream);
+        box-shadow: none;
+    }
+    .search-wrapper .form-control::placeholder { color: rgba(240,236,224,0.3); }
+    .btn-search {
+        background: var(--gold);
+        color: #0d0d0d;
+        border: none;
+        font-weight: 500;
+        border-radius: 6px;
+        padding: 0.5rem 1.25rem;
+    }
+    .btn-search:hover { background: var(--gold-light); color: #0d0d0d; }
+
+    .category-pill {
+        background: var(--dark3);
+        color: rgba(240,236,224,0.6);
+        border: 0.5px solid rgba(240,236,224,0.1);
+        border-radius: 20px;
+        padding: 0.35rem 1rem;
+        font-size: 0.82rem;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+    .category-pill:hover, .category-pill.active {
+        background: var(--gold);
+        color: #0d0d0d;
+        border-color: var(--gold);
+    }
+
+    .product-card {
+        background: var(--dark3);
+        border: 0.5px solid rgba(232,184,75,0.12);
+        border-radius: 10px;
+        overflow: hidden;
+        transition: transform 0.25s, border-color 0.25s;
+        height: 100%;
+    }
+    .product-card:hover { transform: translateY(-5px); border-color: rgba(232,184,75,0.4); }
+    .product-img { height: 190px; object-fit: cover; width: 100%; }
+    .product-img-placeholder {
+        height: 190px;
+        background: #1a1a1a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgba(240,236,224,0.2);
+        font-size: 2.5rem;
+    }
+    .product-card .card-body { background: var(--dark3); padding: 1rem; }
+    .product-badge {
+        font-size: 0.7rem;
+        background: rgba(232,184,75,0.12);
+        color: var(--gold);
+        border-radius: 4px;
+        padding: 0.2rem 0.5rem;
+        display: inline-block;
+        margin-bottom: 0.5rem;
+    }
+    .product-name {
+        font-size: 0.92rem;
+        font-weight: 500;
+        color: var(--cream);
+        margin-bottom: 0.25rem;
+        text-decoration: none;
+        display: block;
+    }
+    .product-name:hover { color: var(--gold); }
+    .product-desc { font-size: 0.78rem; color: rgba(240,236,224,0.45); margin-bottom: 0.75rem; line-height: 1.5; }
+    .product-price { font-size: 1.1rem; font-weight: 600; color: var(--gold); }
+    .product-stock { font-size: 0.75rem; color: rgba(240,236,224,0.4); }
+    .product-seller { font-size: 0.75rem; color: rgba(240,236,224,0.35); margin-top: 0.25rem; }
+    .card-footer-custom {
+        background: var(--dark3);
+        border-top: 0.5px solid rgba(232,184,75,0.08);
+        padding: 0.75rem 1rem;
+    }
+    .btn-view {
+        background: transparent;
+        border: 0.5px solid rgba(232,184,75,0.4);
+        color: var(--gold);
+        border-radius: 6px;
+        font-size: 0.82rem;
+        padding: 0.4rem 1rem;
+        width: 100%;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: block;
+        text-align: center;
+    }
+    .btn-view:hover { background: var(--gold); color: #0d0d0d; }
+
+    .empty-state { text-align: center; padding: 5rem 0; color: rgba(240,236,224,0.3); }
+    .empty-state i { font-size: 3rem; margin-bottom: 1rem; }
+
+    .page-header { padding: 2rem 0 1rem; border-bottom: 0.5px solid rgba(232,184,75,0.1); margin-bottom: 1.5rem; }
+    .page-header h2 { font-size: 1.4rem; font-weight: 500; color: var(--cream); }
+    .result-count { font-size: 0.82rem; color: rgba(240,236,224,0.4); margin-top: 0.25rem; }
+
+    .wip-banner {
+        background: rgba(232,184,75,0.07);
+        border: 0.5px dashed rgba(232,184,75,0.3);
+        border-radius: 6px;
+        padding: 0.75rem 1.25rem;
+        font-size: 0.82rem;
+        color: rgba(232,184,75,0.6);
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+</style>
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+
+<div class="wip-banner">
+    <i class="fa-solid fa-code"></i>
+    Marketplace UI — work in progress. More features coming soon.
+</div>
+
+<div class="search-wrapper">
+    <form method="get" asp-controller="Home" asp-action="Index" class="d-flex gap-2">
+        <input class="form-control" type="search" name="search"
+               placeholder="Search products..." value="@Model.SearchQuery" />
+        <button class="btn-search px-3" type="submit">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+    </form>
+</div>
+
+<div class="d-flex gap-2 flex-wrap mb-4">
+    <a href="@Url.Action("Index")"
+       class="category-pill @(string.IsNullOrEmpty(Model.Category) ? "active" : "")">All</a>
+    @foreach (var cat in new[] { "Electronics", "Clothing", "Food", "Books", "Services", "General" })
+    {
+        <a href="@Url.Action("Index", new { category = cat, search = Model.SearchQuery })"
+           class="category-pill @(Model.Category == cat ? "active" : "")">@cat</a>
+    }
+</div>
+
+<div class="page-header">
+    <h2>
+        @if (!string.IsNullOrEmpty(Model.SearchQuery))
+        {
+            <span>Results for "<span style="color:var(--gold)">@Model.SearchQuery</span>"</span>
+        }
+        else if (!string.IsNullOrEmpty(Model.Category))
+        {
+            <span style="color:var(--gold)">@Model.Category</span>
+        }
+        else
+        {
+            <span>All Listings</span>
+        }
+    </h2>
+    <div class="result-count">@Model.Products.Count product(s) found</div>
+</div>
+
+@if (!Model.Products.Any())
+{
+    <div class="empty-state">
+        <i class="fa-solid fa-box-open"></i>
+        <p>No products found.</p>
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <a asp-controller="Products" asp-action="Create" style="color:var(--gold);font-size:0.9rem;">
+                Be the first to list something →
+            </a>
+        }
+    </div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        @foreach (var product in Model.Products)
+        {
+            <div class="col">
+                <div class="product-card">
+                    <a asp-controller="Products" asp-action="Details" asp-route-id="@product.Id">
+                        @if (!string.IsNullOrEmpty(product.ImagePath))
+                        {
+                            <img src="@product.ImagePath" class="product-img" alt="@product.Name" />
+                        }
+                        else
+                        {
+                            <div class="product-img-placeholder">
+                                <i class="fa-solid fa-image"></i>
+                            </div>
+                        }
+                    </a>
+                    <div class="card-body">
+                        <span class="product-badge">@product.Category</span>
+                        <a asp-controller="Products" asp-action="Details"
+                           asp-route-id="@product.Id" class="product-name">@product.Name</a>
+                        <p class="product-desc">
+                            @(product.Description.Length > 60
+                                ? product.Description[..60] + "..."
+                                : product.Description)
+                        </p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="product-price">&#8369;@product.Price.ToString("N2")</span>
+                            <span class="product-stock">@product.Stock left</span>
+                        </div>
+                        <div class="product-seller">by @product.Seller?.Username</div>
+                    </div>
+                    <div class="card-footer-custom">
+                        <a asp-controller="Products" asp-action="Details"
+                           asp-route-id="@product.Id" class="btn-view">View Product</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
