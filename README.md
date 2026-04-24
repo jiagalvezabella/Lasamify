@@ -42,7 +42,7 @@ Built with **ASP.NET Core MVC (.NET 10)** using **Entity Framework Core + SQLite
 
 ```bash
 # Clone the repo
-git clone https://github.com/YOUR_USERNAME/Lasamify.git
+git clone https://github.com/jiagalvezabella/Lasamify.git
 cd Lasamify
 
 # Restore packages
