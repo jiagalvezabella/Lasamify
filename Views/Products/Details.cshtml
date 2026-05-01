@@ -1,25 +1,27 @@
 @model Lasamify.Models.Product
 @{
     ViewData["Title"] = Model.Name;
+    var avgRating = Model.Reviews.Any() ? Model.Reviews.Average(r => r.Rating) : 0;
+    var reviewCount = Model.Reviews.Count;
 }
 
 <nav aria-label="breadcrumb" class="mb-3">
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Marketplace</a></li>
-        <li class="breadcrumb-item active">@Model.Name</li>
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index" class="text-warning text-decoration-none">Marketplace</a></li>
+        <li class="breadcrumb-item active text-muted" aria-current="page">@Model.Name</li>
     </ol>
 </nav>
 
-<div class="row g-4">
+<div class="row g-4 mb-5">
     <!-- Product Image -->
     <div class="col-md-5">
         @if (!string.IsNullOrEmpty(Model.ImagePath))
         {
-            <img src="@Model.ImagePath" class="img-fluid rounded-3 shadow" alt="@Model.Name" />
+            <img src="@Model.ImagePath" class="img-fluid rounded-3 shadow border border-warning border-opacity-25" alt="@Model.Name" />
         }
         else
         {
-            <div class="bg-light rounded-3 d-flex align-items-center justify-content-center shadow" style="height:350px">
+            <div class="bg-dark rounded-3 d-flex align-items-center justify-content-center shadow border border-warning border-opacity-25" style="height:350px;">
                 <i class="fa-solid fa-image fa-5x text-secondary"></i>
             </div>
         }
@@ -27,16 +29,25 @@
 
     <!-- Product Info -->
     <div class="col-md-7">
-        <span class="badge bg-secondary mb-2">@Model.Category</span>
-        <h2 class="fw-bold mb-1">@Model.Name</h2>
-        <p class="text-muted mb-3">Sold by <strong>@Model.Seller?.Username</strong></p>
+        <span class="badge bg-dark border border-warning text-warning mb-2">@Model.Category</span>
+        <h2 class="fw-bold mb-1 text-light">@Model.Name</h2>
+        
+        <div class="mb-2 text-warning">
+            @for (int i = 1; i <= 5; i++)
+            {
+                <i class="@(i <= Math.Round(avgRating) ? "fa-solid" : "fa-regular") fa-star"></i>
+            }
+            <span class="text-muted ms-2 small">(@reviewCount reviews)</span>
+        </div>
 
-        <p class="fs-2 fw-bold text-success mb-3">₱@Model.Price.ToString("N2")</p>
+        <p class="mb-3 text-secondary">Sold by <strong class="text-light">@Model.Seller?.Username</strong></p>
 
-        <p class="lead mb-4">@Model.Description</p>
+        <p class="fs-2 fw-bold mb-3 text-warning">₱@Model.Price.ToString("N2")</p>
+
+        <p class="lead mb-4 text-light" style="font-size: 1rem; line-height: 1.6;">@Model.Description</p>
 
         <div class="mb-3">
-            <span class="@(Model.Stock > 0 ? "text-success" : "text-danger") fw-semibold">
+            <span class="fw-semibold @(Model.Stock > 0 ? "text-success" : "text-danger")">
                 <i class="fa-solid fa-box me-1"></i>
                 @(Model.Stock > 0 ? $"{Model.Stock} in stock" : "Out of stock")
             </span>
@@ -47,10 +58,13 @@
             <form method="post" asp-controller="Products" asp-action="Buy" asp-route-id="@Model.Id">
                 @Html.AntiForgeryToken()
                 <div class="d-flex gap-3 align-items-center mb-3">
-                    <label class="fw-semibold">Qty:</label>
+                    <label class="fw-semibold text-light">Qty:</label>
+                    
+                    <!-- Fixed: Removed dark background override so text is fully visible -->
                     <input type="number" name="quantity" value="1" min="1" max="@Model.Stock"
-                           class="form-control" style="width:80px" />
-                    <button type="submit" class="btn btn-warning btn-lg px-4">
+                           class="form-control text-center fw-bold" style="width:80px;" />
+                    
+                    <button type="submit" class="btn btn-warning btn-lg px-4 fw-bold">
                         <i class="fa-solid fa-cart-shopping me-2"></i>Buy Now
                     </button>
                 </div>
@@ -58,13 +72,124 @@
         }
         else if (User.Identity?.IsAuthenticated != true)
         {
-            <a asp-controller="Account" asp-action="Login" class="btn btn-warning btn-lg px-4">
+            <a asp-controller="Account" asp-action="Login" class="btn btn-warning btn-lg px-4 fw-bold">
                 <i class="fa-solid fa-right-to-bracket me-2"></i>Login to Buy
             </a>
         }
 
-        <div class="mt-4 text-muted small">
+        <div class="mt-4 small text-secondary">
             <i class="fa-solid fa-clock me-1"></i>Listed on @Model.CreatedAt.ToString("MMMM dd, yyyy")
+        </div>
+    </div>
+</div>
+
+<hr class="border-secondary mb-5" />
+
+<!-- Reviews & Comments Section -->
+<div class="row">
+    <!-- Left Side: Review Form -->
+    <div class="col-md-4 mb-4">
+        <h4 class="fw-bold mb-4 text-light">Customer Reviews</h4>
+        
+        @if (ViewBag.HasBought && !ViewBag.HasReviewed)
+        {
+            <div class="card bg-dark border-secondary shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title mb-3 text-warning">Leave a Review</h5>
+                    <form method="post" asp-controller="Products" asp-action="AddReview">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="productId" value="@Model.Id" />
+                        
+                        <div class="mb-3">
+                            <label class="form-label text-light small">Rating</label>
+                            <!-- Fixed: Uses standard bootstrap form inputs -->
+                            <select name="rating" class="form-select">
+                                <option value="5">5 Stars - Excellent</option>
+                                <option value="4">4 Stars - Good</option>
+                                <option value="3">3 Stars - Average</option>
+                                <option value="2">2 Stars - Poor</option>
+                                <option value="1">1 Star - Terrible</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label text-light small">Comment</label>
+                            <textarea name="comment" class="form-control" rows="4" required placeholder="What did you think?"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-warning w-100 fw-bold">Submit Review</button>
+                    </form>
+                </div>
+            </div>
+        }
+        else if (ViewBag.HasReviewed)
+        {
+            <div class="alert alert-success bg-dark border-success text-success d-flex align-items-center">
+                <i class="fa-solid fa-circle-check me-2"></i>
+                <div>You have already reviewed this product.</div>
+            </div>
+        }
+        else if (User.Identity?.IsAuthenticated == true)
+        {
+            <div class="alert bg-dark border-secondary text-secondary small">
+                <i class="fa-solid fa-circle-info me-2"></i> You must purchase this item before leaving a review.
+            </div>
+        }
+        else
+        {
+            <div class="alert bg-dark border-secondary text-secondary small">
+                <i class="fa-solid fa-lock me-2"></i> <a asp-controller="Account" asp-action="Login" class="text-warning text-decoration-none">Login</a> to leave a review.
+            </div>
+        }
+    </div>
+
+    <!-- Right Side: Comments List -->
+    <div class="col-md-8">
+        <h5 class="fw-bold mb-4 text-secondary border-bottom border-secondary pb-2">Comments (@reviewCount)</h5>
+        
+        <div class="reviews-list">
+            @if (!Model.Reviews.Any())
+            {
+                <div class="text-center py-5 text-secondary">
+                    <i class="fa-regular fa-comments fa-3x mb-3 opacity-50"></i>
+                    <p>No reviews yet. Be the first to share your thoughts!</p>
+                </div>
+            }
+            else
+            {
+                foreach (var review in Model.Reviews.OrderByDescending(r => r.CreatedAt))
+                {
+                    <div class="card bg-dark border-secondary mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div class="d-flex align-items-center gap-2">
+                                    @if (!string.IsNullOrEmpty(review.User?.ProfilePicturePath))
+                                    {
+                                        <img src="@review.User.ProfilePicturePath" class="rounded-circle" style="width: 32px; height: 32px; object-fit: cover;" />
+                                    }
+                                    else
+                                    {
+                                        <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-light" style="width: 32px; height: 32px;">
+                                            <i class="fa-solid fa-user small"></i>
+                                        </div>
+                                    }
+                                    <strong class="text-light">@review.User?.Username</strong>
+                                </div>
+                                <small class="text-secondary">@review.CreatedAt.ToString("MMM dd, yyyy")</small>
+                            </div>
+                            
+                            <div class="mb-2 text-warning" style="font-size: 0.85rem;">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    <i class="@(i <= review.Rating ? "fa-solid" : "fa-regular") fa-star"></i>
+                                }
+                            </div>
+                            
+                            <p class="mb-0 text-light" style="font-size: 0.95rem;">@review.Comment</p>
+                        </div>
+                    </div>
+                }
+            }
         </div>
     </div>
 </div>

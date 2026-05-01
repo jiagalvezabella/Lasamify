@@ -22,9 +22,25 @@ namespace Lasamify.Controllers
         {
             var product = await _context.Products
                 .Include(p => p.Seller)
+                .Include(p => p.Reviews)
+                    .ThenInclude(r => r.User)
                 .FirstOrDefaultAsync(p => p.Id == id);
 
             if (product == null) return NotFound();
+
+            bool hasBought = false;
+            bool hasReviewed = false;
+
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+                hasBought = await _context.Transactions.AnyAsync(t => t.BuyerId == userId && t.ProductId == id);
+                hasReviewed = await _context.Reviews.AnyAsync(r => r.UserId == userId && r.ProductId == id);
+            }
+
+            ViewBag.HasBought = hasBought;
+            ViewBag.HasReviewed = hasReviewed;
+
             return View(product);
         }
 
@@ -161,6 +177,46 @@ namespace Lasamify.Controllers
 
             TempData["Success"] = $"Order placed! Total: ₱{transaction.TotalAmount:N2}";
             return RedirectToAction("Profile", "Account");
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddReview(int productId, int rating, string comment)
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+            var hasBought = await _context.Transactions
+                .AnyAsync(t => t.BuyerId == userId && t.ProductId == productId);
+
+            if (!hasBought)
+            {
+                TempData["Error"] = "You can only review products you have purchased.";
+                return RedirectToAction("Details", new { id = productId });
+            }
+
+            var existingReview = await _context.Reviews
+                .AnyAsync(r => r.UserId == userId && r.ProductId == productId);
+
+            if (existingReview)
+            {
+                TempData["Error"] = "You have already reviewed this product.";
+                return RedirectToAction("Details", new { id = productId });
+            }
+
+            var review = new Review
+            {
+                ProductId = productId,
+                UserId = userId,
+                Rating = Math.Clamp(rating, 1, 5),
+                Comment = comment
+            };
+
+            _context.Reviews.Add(review);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Thank you for your review!";
+            return RedirectToAction("Details", new { id = productId });
         }
     }
 }

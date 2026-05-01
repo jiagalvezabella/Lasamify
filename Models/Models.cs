@@ -25,6 +25,7 @@ namespace Lasamify.Models
 
         public ICollection<Product> Products { get; set; } = new List<Product>();
         public ICollection<Transaction> BuyerTransactions { get; set; } = new List<Transaction>();
+        public ICollection<Review> Reviews { get; set; } = new List<Review>();
     }
 
     public class Product
@@ -56,6 +57,7 @@ namespace Lasamify.Models
         public User? Seller { get; set; }
 
         public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
+        public ICollection<Review> Reviews { get; set; } = new List<Review>();
     }
 
     public class Transaction
@@ -75,5 +77,25 @@ namespace Lasamify.Models
         public string Status { get; set; } = "Pending"; // Pending, Completed, Cancelled
 
         public DateTime TransactionDate { get; set; } = DateTime.UtcNow;
+    }
+
+    public class Review
+    {
+        public int Id { get; set; }
+
+        public int ProductId { get; set; }
+        public Product? Product { get; set; }
+
+        public int UserId { get; set; }
+        public User? User { get; set; }
+
+        [Required]
+        [Range(1, 5)]
+        public int Rating { get; set; }
+
+        [StringLength(1000)]
+        public string Comment { get; set; } = string.Empty;
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }
