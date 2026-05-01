@@ -18,6 +18,7 @@ namespace Lasamify.Controllers
         {
             var query = _context.Products
                 .Include(p => p.Seller)
+                .Include(p => p.Reviews)
                 .Where(p => p.IsAvailable && p.Stock > 0)
                 .AsQueryable();
 
@@ -39,6 +40,18 @@ namespace Lasamify.Controllers
 
         public IActionResult About() => View();
 
-        public IActionResult Landing() => View();
+        public async Task<IActionResult> Landing()
+        {
+            // Fetch the 3 newest available products to showcase on the landing page
+            var latestProducts = await _context.Products
+                .Include(p => p.Seller)
+                .Include(p => p.Reviews)
+                .Where(p => p.IsAvailable && p.Stock > 0)
+                .OrderByDescending(p => p.CreatedAt)
+                .Take(3)
+                .ToListAsync();
+
+            return View(latestProducts);
+        }
     }
 }
