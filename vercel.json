@@ -3,8 +3,7 @@
   "builds": [
     {
       "src": "Lasamify.csproj",
-      "use": "vercel-dotnet",
-      "config": { "runtime": "net10.0" }
+      "use": "@vercel/python"
     }
   ],
   "routes": [
