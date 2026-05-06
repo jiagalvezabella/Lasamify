@@ -2,8 +2,9 @@
   "version": 2,
   "builds": [
     {
-      "src": "Dockerfile",
-      "use": "@vercel/docker"
+      "src": "Lasamify.csproj",
+      "use": "vercel-dotnet",
+      "config": { "runtime": "net10.0" }
     }
   ],
   "routes": [
