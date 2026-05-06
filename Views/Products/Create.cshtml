@@ -1,65 +1,276 @@
 @model Lasamify.Models.CreateProductViewModel
 @{
     ViewData["Title"] = "List a Product";
+    Layout = "_Layout";
 }
 
-<div class="row justify-content-center">
-    <div class="col-md-7">
-        <div class="card shadow-sm">
-            <div class="card-header bg-dark text-white">
-                <h5 class="mb-0"><i class="fa-solid fa-tag me-2"></i>List a Product for Sale</h5>
-            </div>
-            <div class="card-body p-4">
-                <form method="post" enctype="multipart/form-data" asp-controller="Products" asp-action="Create">
-                    @Html.AntiForgeryToken()
+<style>
+    :root {
+        --primary: #FFB703; 
+        --primary-hover: #FF9E00;
+        --primary-light: #FFF4D6;
+        --black: #0B0F19; 
+        --dark: #1C2434;
+        --gray: #64748B;
+        --light-border: #E2E8F0;
+        --bg-light: #F8FAFC;
+        --white: #FFFFFF;
+    }
 
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Product Name *</label>
-                        <input asp-for="Name" class="form-control" placeholder="e.g. iPhone 13 Pro" />
-                        <span asp-validation-for="Name" class="text-danger small"></span>
-                    </div>
+    .create-container {
+        max-width: 700px;
+        margin: 3rem auto;
+        padding: 0 2rem;
+    }
 
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Description</label>
-                        <textarea asp-for="Description" class="form-control" rows="3"
-                                  placeholder="Describe your product..."></textarea>
-                    </div>
+    .form-card {
+        background: var(--white);
+        border-radius: 12px;
+        border: 1px solid var(--light-border);
+        padding: 3rem;
+        box-shadow: 0 20px 40px rgba(11, 15, 25, 0.08);
+    }
 
-                    <div class="row g-3 mb-3">
-                        <div class="col">
-                            <label class="form-label fw-semibold">Price (₱) *</label>
-                            <input asp-for="Price" class="form-control" type="number" step="0.01" min="0.01" />
-                            <span asp-validation-for="Price" class="text-danger small"></span>
-                        </div>
-                        <div class="col">
-                            <label class="form-label fw-semibold">Stock *</label>
-                            <input asp-for="Stock" class="form-control" type="number" min="1" />
-                        </div>
-                    </div>
+    .form-header {
+        margin-bottom: 2.5rem;
+        text-align: center;
+    }
 
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Category</label>
-                        <select asp-for="Category" class="form-select">
-                            <option>General</option>
-                            <option>Electronics</option>
-                            <option>Clothing</option>
-                            <option>Food</option>
-                            <option>Books</option>
-                            <option>Services</option>
-                        </select>
-                    </div>
+    .form-header h1 {
+        font-family: 'Outfit', sans-serif;
+        font-size: 2rem;
+        font-weight: 900;
+        color: var(--black);
+        margin-bottom: 0.5rem;
+    }
 
-                    <div class="mb-4">
-                        <label class="form-label fw-semibold">Product Image</label>
-                        <input asp-for="Image" type="file" class="form-control" accept="image/*" />
-                        <small class="text-muted">JPG, PNG, GIF, WEBP allowed</small>
-                    </div>
+    .form-header p {
+        color: var(--gray);
+        font-size: 1rem;
+    }
 
-                    <button type="submit" class="btn btn-warning w-100 fw-bold">
-                        <i class="fa-solid fa-upload me-2"></i>List Product
-                    </button>
-                </form>
-            </div>
+    .form-group {
+        margin-bottom: 1.75rem;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: 600;
+        color: var(--black);
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .required {
+        color: #EF4444;
+        margin-left: 0.25rem;
+    }
+
+    .form-input,
+    .form-textarea,
+    .form-select {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        border: 1px solid var(--light-border);
+        border-radius: 8px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 1rem;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        background: var(--white);
+        color: var(--black);
+    }
+
+    .form-input:focus,
+    .form-textarea:focus,
+    .form-select:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(255, 183, 3, 0.1);
+    }
+
+    .form-textarea {
+        resize: vertical;
+        min-height: 120px;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+
+    .form-helper {
+        font-size: 0.8rem;
+        color: var(--gray);
+        margin-top: 0.35rem;
+    }
+
+    .validation-error {
+        color: #EF4444;
+        font-size: 0.8rem;
+        margin-top: 0.35rem;
+        display: block;
+    }
+
+    .btn-primary {
+        width: 100%;
+        background: var(--primary);
+        color: var(--black);
+        padding: 1rem;
+        border: none;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 4px 14px rgba(255, 183, 3, 0.4);
+        margin-top: 1rem;
+    }
+
+    .btn-primary:hover {
+        background: var(--primary-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 183, 3, 0.5);
+    }
+
+    .file-input-wrapper {
+        position: relative;
+    }
+
+    .file-input-custom {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        padding: 2rem;
+        border: 2px dashed var(--light-border);
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: var(--bg-light);
+    }
+
+    .file-input-custom:hover {
+        border-color: var(--primary);
+        background: rgba(255, 183, 3, 0.05);
+    }
+
+    .file-input-wrapper input[type="file"] {
+        display: none;
+    }
+
+    .alert {
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+    }
+
+    .alert-error {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #991B1B;
+    }
+
+    .alert-error ul {
+        margin: 0;
+        padding-left: 1.25rem;
+    }
+
+    @@media (max-width: 640px) {
+        .create-container { padding: 0 1rem; }
+        .form-card { padding: 1.5rem; }
+        .form-header h1 { font-size: 1.5rem; }
+        .form-row { grid-template-columns: 1fr; }
+    }
+</style>
+
+<div class="create-container">
+    <div class="form-card">
+        <div class="form-header">
+            <h1><i class="fa-solid fa-plus me-2" style="color: var(--primary);"></i>List Your Item</h1>
+            <p>Share your product with our community</p>
         </div>
+
+        @if (ViewData.ModelState.ErrorCount > 0)
+        {
+            <div class="alert alert-error">
+                <ul>
+                    @foreach (var modelState in ViewData.ModelState.Values)
+                    {
+                        @foreach (var error in modelState.Errors)
+                        {
+                            <li>@error.ErrorMessage</li>
+                        }
+                    }
+                </ul>
+            </div>
+        }
+
+        <form method="post" enctype="multipart/form-data" asp-controller="Products" asp-action="Create">
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                <label class="form-label" for="name">
+                    Product Name <span class="required">*</span>
+                </label>
+                <input asp-for="Name" type="text" class="form-input" id="name" placeholder="e.g. iPhone 13 Pro, Vintage Sofa" />
+                <span asp-validation-for="Name" class="validation-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="description">Description</label>
+                <textarea asp-for="Description" class="form-textarea" id="description" placeholder="Describe your product: condition, features, specifications..."></textarea>
+                <span asp-validation-for="Description" class="validation-error"></span>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label" for="price">
+                        Price (₱) <span class="required">*</span>
+                    </label>
+                    <input asp-for="Price" type="number" step="0.01" min="0.01" class="form-input" id="price" placeholder="0.00" />
+                    <span asp-validation-for="Price" class="validation-error"></span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="stock">
+                        Quantity in Stock <span class="required">*</span>
+                    </label>
+                    <input asp-for="Stock" type="number" min="1" class="form-input" id="stock" placeholder="1" />
+                    <span asp-validation-for="Stock" class="validation-error"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="category">Category</label>
+                <select asp-for="Category" class="form-select" id="category">
+                    <option value="General">General</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Clothing">Clothing</option>
+                    <option value="Food">Food</option>
+                    <option value="Books">Books</option>
+                    <option value="Services">Services</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="image">Product Image</label>
+                <div class="file-input-wrapper">
+                    <label for="image" class="file-input-custom">
+                        <i class="fa-solid fa-cloud-arrow-up" style="color: var(--primary); font-size: 1.5rem;"></i>
+                        <div>
+                            <div style="font-weight: 600; color: var(--black);">Click to upload an image</div>
+                            <div style="font-size: 0.85rem; color: var(--gray);">JPG, PNG, GIF, WEBP (Max 5MB)</div>
+                        </div>
+                    </label>
+                    <input asp-for="Image" type="file" id="image" accept="image/*" />
+                </div>
+                <span asp-validation-for="Image" class="validation-error"></span>
+            </div>
+
+            <button type="submit" class="btn-primary">
+                <i class="fa-solid fa-paper-plane me-2"></i>List Product Now
+            </button>
+        </form>
     </div>
 </div>

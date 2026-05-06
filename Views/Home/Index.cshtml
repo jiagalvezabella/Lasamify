@@ -1,219 +1,458 @@
 @model Lasamify.Models.ProductSearchViewModel
 @{
     ViewData["Title"] = "Marketplace";
+    Layout = "_Layout";
 }
 
 <style>
     :root {
-        --gold: #e8b84b;
-        --gold-light: #f5d68a;
-        --cream: #f0ece0;
-        --dark: #0d0d0d;
-        --dark2: #161616;
-        --dark3: #1e1e1e;
+        --primary: #FFB703; 
+        --primary-hover: #FF9E00;
+        --primary-light: #FFF4D6;
+        --black: #0B0F19; 
+        --dark: #1C2434;
+        --gray: #64748B;
+        --light-border: #E2E8F0;
+        --bg-light: #F8FAFC;
+        --white: #FFFFFF;
     }
 
     body {
-        background: var(--dark);
-        color: var(--cream);
-        font-family: 'DM Sans', sans-serif;
+        background: var(--bg-light) !important;
+        color: var(--black) !important;
     }
 
-    .search-wrapper {
-        background: var(--dark2);
-        border: 0.5px solid rgba(232,184,75,0.2);
-        border-radius: 8px;
-        padding: 1.5rem 2rem;
-        margin-bottom: 2rem;
+    .container-marketplace {
+        max-width: 1200px;
+        margin: 0 auto !important;
+        padding: 4rem 2rem !important;
+        background: var(--bg-light) !important;
     }
-    .search-wrapper .form-control {
-        background: var(--dark3);
-        border: 0.5px solid rgba(232,184,75,0.2);
-        color: var(--cream);
-        border-radius: 6px;
+
+    .marketplace-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2.5rem;
+        gap: 2rem;
     }
-    .search-wrapper .form-control:focus {
-        background: var(--dark3);
-        border-color: var(--gold);
-        color: var(--cream);
-        box-shadow: none;
+
+    .marketplace-header h1 {
+        font-family: 'Outfit', sans-serif;
+        font-size: 2.25rem;
+        font-weight: 900;
+        color: var(--black) !important;
+        margin: 0 !important;
     }
-    .search-wrapper .form-control::placeholder { color: rgba(240,236,224,0.3); }
+
+    .btn-list-product {
+        background: var(--primary) !important;
+        color: var(--black) !important;
+        padding: 0.75rem 1.75rem !important;
+        border-radius: 8px !important;
+        font-weight: 700 !important;
+        text-decoration: none !important;
+        transition: all 0.2s;
+        box-shadow: 0 4px 14px rgba(255, 183, 3, 0.4);
+        white-space: nowrap;
+        border: none !important;
+    }
+
+    .btn-list-product:hover {
+        background: var(--primary-hover) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 183, 3, 0.5);
+        color: var(--black) !important;
+    }
+
+    .search-bar {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .search-input-wrapper {
+        flex: 1;
+        position: relative;
+    }
+
+    .search-input {
+        width: 100% !important;
+        padding: 1rem 1.5rem !important;
+        border: 1px solid var(--light-border) !important;
+        border-radius: 8px !important;
+        font-family: 'DM Sans', sans-serif !important;
+        font-size: 1rem !important;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        background: var(--white) !important;
+        color: var(--black) !important;
+    }
+
+    .search-input:focus {
+        outline: none !important;
+        border-color: var(--primary) !important;
+        box-shadow: 0 0 0 3px rgba(255, 183, 3, 0.1) !important;
+        background: var(--white) !important;
+        color: var(--black) !important;
+    }
+
     .btn-search {
-        background: var(--gold);
-        color: #0d0d0d;
-        border: none;
-        font-weight: 500;
-        border-radius: 6px;
-        padding: 0.5rem 1.25rem;
+        background: var(--primary) !important;
+        color: var(--black) !important;
+        border: none !important;
+        padding: 1rem 2rem !important;
+        border-radius: 8px !important;
+        font-weight: 700 !important;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 4px 14px rgba(255, 183, 3, 0.4);
     }
-    .btn-search:hover { background: var(--gold-light); color: #0d0d0d; }
+
+    .btn-search:hover {
+        background: var(--primary-hover) !important;
+        transform: translateY(-2px);
+        color: var(--black) !important;
+    }
+
+    .category-filters {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2.5rem;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+    }
 
     .category-pill {
-        background: var(--dark3);
-        color: rgba(240,236,224,0.6);
-        border: 0.5px solid rgba(240,236,224,0.1);
-        border-radius: 20px;
-        padding: 0.35rem 1rem;
-        font-size: 0.82rem;
-        text-decoration: none;
+        background: var(--white) !important;
+        color: var(--gray) !important;
+        border: 1px solid var(--light-border) !important;
+        padding: 0.5rem 1.25rem !important;
+        border-radius: 50px !important;
+        font-size: 0.9rem;
+        font-weight: 500;
+        text-decoration: none !important;
         transition: all 0.2s;
+        white-space: nowrap;
+        cursor: pointer;
+        display: inline-block;
     }
-    .category-pill:hover, .category-pill.active {
-        background: var(--gold);
-        color: #0d0d0d;
-        border-color: var(--gold);
+
+    .category-pill:hover,
+    .category-pill.active {
+        background: var(--primary) !important;
+        color: var(--black) !important;
+        border-color: var(--primary) !important;
+    }
+
+    .results-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid var(--light-border);
+    }
+
+    .results-title {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--black) !important;
+        margin: 0 !important;
+    }
+
+    .results-count {
+        color: var(--gray);
+        font-size: 0.9rem;
+    }
+
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
     }
 
     .product-card {
-        background: var(--dark3);
-        border: 0.5px solid rgba(232,184,75,0.12);
-        border-radius: 10px;
+        background: var(--white) !important;
+        border-radius: 12px !important;
+        border: 1px solid var(--light-border) !important;
         overflow: hidden;
-        transition: transform 0.25s, border-color 0.25s;
+        transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+        display: flex;
+        flex-direction: column;
         height: 100%;
+        box-shadow: none !important;
     }
-    .product-card:hover { transform: translateY(-5px); border-color: rgba(232,184,75,0.4); }
-    .product-img { height: 190px; object-fit: cover; width: 100%; }
-    .product-img-placeholder {
-        height: 190px;
-        background: #1a1a1a;
+
+    .product-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 24px rgba(11, 15, 25, 0.12) !important;
+        border-color: var(--primary) !important;
+    }
+
+    .product-image-wrapper {
+        width: 100%;
+        height: 200px;
+        overflow: hidden;
+        background: var(--bg-light);
         display: flex;
         align-items: center;
         justify-content: center;
-        color: rgba(240,236,224,0.2);
-        font-size: 2.5rem;
     }
-    .product-card .card-body { background: var(--dark3); padding: 1rem; }
-    .product-badge {
-        font-size: 0.7rem;
-        background: rgba(232,184,75,0.12);
-        color: var(--gold);
-        border-radius: 4px;
-        padding: 0.2rem 0.5rem;
-        display: inline-block;
-        margin-bottom: 0.5rem;
-    }
-    .product-name {
-        font-size: 0.92rem;
-        font-weight: 500;
-        color: var(--cream);
-        margin-bottom: 0.25rem;
-        text-decoration: none;
-        display: block;
-    }
-    .product-name:hover { color: var(--gold); }
-    .product-desc { font-size: 0.78rem; color: rgba(240,236,224,0.45); margin-bottom: 0.75rem; line-height: 1.5; }
-    .product-price { font-size: 1.1rem; font-weight: 600; color: var(--gold); }
-    .product-stock { font-size: 0.75rem; color: rgba(240,236,224,0.4); }
-    .product-seller { font-size: 0.75rem; color: rgba(240,236,224,0.35); margin-top: 0.25rem; }
-    .card-footer-custom {
-        background: var(--dark3);
-        border-top: 0.5px solid rgba(232,184,75,0.08);
-        padding: 0.75rem 1rem;
-    }
-    .btn-view {
-        background: transparent;
-        border: 0.5px solid rgba(232,184,75,0.4);
-        color: var(--gold);
-        border-radius: 6px;
-        font-size: 0.82rem;
-        padding: 0.4rem 1rem;
+
+    .product-img {
         width: 100%;
-        transition: all 0.2s;
-        text-decoration: none;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s;
+    }
+
+    .product-card:hover .product-img {
+        transform: scale(1.05);
+    }
+
+    .product-img-placeholder {
+        color: var(--gray);
+        font-size: 3rem;
+    }
+
+    .product-info {
+        padding: 1.25rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .product-category {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--primary);
+        margin-bottom: 0.5rem;
+        letter-spacing: 0.5px;
+    }
+
+    .product-name {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--black) !important;
+        margin: 0 0 0.5rem 0 !important;
+        text-decoration: none !important;
         display: block;
+        transition: color 0.2s;
+    }
+
+    .product-card:hover .product-name {
+        color: var(--primary) !important;
+    }
+
+    .product-desc {
+        font-size: 0.85rem;
+        color: var(--gray);
+        line-height: 1.5;
+        margin-bottom: 1rem !important;
+        flex-grow: 1;
+    }
+
+    .product-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 1rem;
+        border-top: 1px solid var(--light-border);
+    }
+
+    .product-price {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.25rem;
+        font-weight: 900;
+        color: var(--primary-hover);
+    }
+
+    .product-meta {
+        text-align: right;
+        font-size: 0.8rem;
+        color: var(--gray);
+    }
+
+    .view-product-btn {
+        background: transparent !important;
+        border: 1px solid var(--primary) !important;
+        color: var(--primary) !important;
+        padding: 0.5rem 1rem !important;
+        border-radius: 6px !important;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-decoration: none !important;
+        transition: all 0.2s;
         text-align: center;
     }
-    .btn-view:hover { background: var(--gold); color: #0d0d0d; }
 
-    .empty-state { text-align: center; padding: 5rem 0; color: rgba(240,236,224,0.3); }
-    .empty-state i { font-size: 3rem; margin-bottom: 1rem; }
+    .view-product-btn:hover {
+        background: var(--primary) !important;
+        color: var(--black) !important;
+    }
 
-    .page-header { padding: 2rem 0 1rem; border-bottom: 0.5px solid rgba(232,184,75,0.1); margin-bottom: 1.5rem; }
-    .page-header h2 { font-size: 1.4rem; font-weight: 500; color: var(--cream); }
-    .result-count { font-size: 0.82rem; color: rgba(240,236,224,0.4); margin-top: 0.25rem; }
+    .empty-state {
+        text-align: center;
+        padding: 5rem 2rem;
+        background: var(--bg-light);
+        border-radius: 12px;
+        border: 1px solid var(--light-border);
+    }
 
-    .wip-banner {
-        background: rgba(232,184,75,0.07);
-        border: 0.5px dashed rgba(232,184,75,0.3);
-        border-radius: 6px;
-        padding: 0.75rem 1.25rem;
-        font-size: 0.82rem;
-        color: rgba(232,184,75,0.6);
+    .empty-state i {
+        font-size: 3.5rem;
+        color: var(--gray);
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+
+    .empty-state h2 {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.5rem;
+        color: var(--black);
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-state p {
+        color: var(--gray);
         margin-bottom: 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
+    }
+
+    .empty-state a {
+        background: var(--primary) !important;
+        color: var(--black) !important;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        text-decoration: none !important;
+        font-weight: 600;
+        transition: all 0.2s;
+        display: inline-block;
+    }
+
+    .empty-state a:hover {
+        background: var(--primary-hover) !important;
+        transform: translateY(-2px);
+    }
+
+    @@media (max-width: 768px) {
+        .container-marketplace { padding: 2rem 1rem !important; }
+        .marketplace-header { flex-direction: column; align-items: stretch; }
+        .marketplace-header h1 { font-size: 1.75rem; }
+        .btn-list-product { text-align: center; }
+        .search-bar { flex-direction: column; }
+        .products-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; }
     }
 </style>
 
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
-
-<div class="wip-banner">
-    <i class="fa-solid fa-code"></i>
-    Marketplace UI — work in progress. More features coming soon.
-</div>
-
-<div class="search-wrapper">
-    <form method="get" asp-controller="Home" asp-action="Index" class="d-flex gap-2">
-        <input class="form-control" type="search" name="search"
-               placeholder="Search products..." value="@Model.SearchQuery" />
-        <button class="btn-search px-3" type="submit">
-            <i class="fa-solid fa-magnifying-glass"></i>
-        </button>
-    </form>
-</div>
-
-<div class="d-flex gap-2 flex-wrap mb-4">
-    <a href="@Url.Action("Index")"
-       class="category-pill @(string.IsNullOrEmpty(Model.Category) ? "active" : "")">All</a>
-    @foreach (var cat in new[] { "Electronics", "Clothing", "Food", "Books", "Services", "General" })
-    {
-        <a href="@Url.Action("Index", new { category = cat, search = Model.SearchQuery })"
-           class="category-pill @(Model.Category == cat ? "active" : "")">@cat</a>
-    }
-</div>
-
-<div class="page-header">
-    <h2>
-        @if (!string.IsNullOrEmpty(Model.SearchQuery))
-        {
-            <span>Results for "<span style="color:var(--gold)">@Model.SearchQuery</span>"</span>
-        }
-        else if (!string.IsNullOrEmpty(Model.Category))
-        {
-            <span style="color:var(--gold)">@Model.Category</span>
-        }
-        else
-        {
-            <span>All Listings</span>
-        }
-    </h2>
-    <div class="result-count">@Model.Products.Count product(s) found</div>
-</div>
-
-@if (!Model.Products.Any())
-{
-    <div class="empty-state">
-        <i class="fa-solid fa-box-open"></i>
-        <p>No products found.</p>
+<div class="container-marketplace">
+    <div class="marketplace-header">
+        <div>
+            <h1>
+                @if (!string.IsNullOrEmpty(Model.SearchQuery))
+                {
+                    <span>Search Results for "<span style="color:var(--primary)">@Model.SearchQuery</span>"</span>
+                }
+                else if (!string.IsNullOrEmpty(Model.Category))
+                {
+                    <span><span style="color:var(--primary)">@Model.Category</span> Products</span>
+                }
+                else
+                {
+                    <span>Browse Our <span style="color:var(--primary)">Marketplace</span></span>
+                }
+            </h1>
+        </div>
         @if (User.Identity?.IsAuthenticated == true)
         {
-            <a asp-controller="Products" asp-action="Create" style="color:var(--gold);font-size:0.9rem;">
-                Be the first to list something →
+            <a asp-controller="Products" asp-action="Create" class="btn-list-product">
+                <i class="fa-solid fa-plus me-2"></i>List a Product
             </a>
         }
     </div>
-}
-else
-{
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-        @foreach (var product in Model.Products)
+
+    <div class="search-bar">
+        <div class="search-input-wrapper">
+            <form method="get" asp-controller="Home" asp-action="Index" class="d-flex gap-0" style="width:100%;">
+                <input class="search-input" type="search" name="search"
+                       placeholder="Search products, categories..." value="@Model.SearchQuery" style="border-radius:8px 0 0 8px; flex:1;" />
+                <button class="btn-search" type="submit" style="border-radius:0 8px 8px 0;">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="category-filters">
+        <a href="@Url.Action("Index")"
+           class="category-pill @(string.IsNullOrEmpty(Model.Category) ? "active" : "")">All Categories</a>
+        @foreach (var cat in new[] { "Electronics", "Clothing", "Food", "Books", "Services", "General" })
         {
-            <div class="col">
+            <a href="@Url.Action("Index", new { category = cat, search = Model.SearchQuery })"
+               class="category-pill @(Model.Category == cat ? "active" : "")">@cat</a>
+        }
+    </div>
+
+    <div class="results-info">
+        <h2 class="results-title">
+            @if (!Model.Products.Any())
+            {
+                <span>No Products Found</span>
+            }
+            else if (Model.Products.Count == 1)
+            {
+                <span>1 Product</span>
+            }
+            else
+            {
+                <span>@Model.Products.Count Products</span>
+            }
+        </h2>
+        @if (Model.Products.Any())
+        {
+            <span class="results-count">Showing all available listings</span>
+        }
+    </div>
+
+    @if (!Model.Products.Any())
+    {
+        <div class="empty-state">
+            <i class="fa-solid fa-inbox"></i>
+            <h2>No Products Found</h2>
+            <p>
+                @if (!string.IsNullOrEmpty(Model.SearchQuery))
+                {
+                    <span>Try adjusting your search terms or browse all categories</span>
+                }
+                else
+                {
+                    <span>No products are currently available in this category</span>
+                }
+            </p>
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <a asp-controller="Products" asp-action="Create">
+                    <i class="fa-solid fa-plus me-2"></i>Be the First to List
+                </a>
+            }
+            else
+            {
+                <a asp-controller="Account" asp-action="Register">
+                    <i class="fa-solid fa-arrow-right-to-bracket me-2"></i>Sign Up to Sell
+                </a>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="products-grid">
+            @foreach (var product in Model.Products)
+            {
                 <div class="product-card">
-                    <a asp-controller="Products" asp-action="Details" asp-route-id="@product.Id">
+                    <a asp-controller="Products" asp-action="Details" asp-route-id="@product.Id" class="product-image-wrapper">
                         @if (!string.IsNullOrEmpty(product.ImagePath))
                         {
                             <img src="@product.ImagePath" class="product-img" alt="@product.Name" />
@@ -225,27 +464,29 @@ else
                             </div>
                         }
                     </a>
-                    <div class="card-body">
-                        <span class="product-badge">@product.Category</span>
+                    <div class="product-info">
+                        <div class="product-category">@product.Category</div>
                         <a asp-controller="Products" asp-action="Details"
                            asp-route-id="@product.Id" class="product-name">@product.Name</a>
                         <p class="product-desc">
-                            @(product.Description.Length > 60
-                                ? product.Description[..60] + "..."
-                                : product.Description)
+                            @(string.IsNullOrEmpty(product.Description) ? "No description" : 
+                                (product.Description.Length > 75
+                                    ? product.Description[..75] + "..."
+                                    : product.Description))
                         </p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="product-price">&#8369;@product.Price.ToString("N2")</span>
-                            <span class="product-stock">@product.Stock left</span>
+                        <div class="product-footer">
+                            <div>
+                                <div class="product-price">₱@product.Price.ToString("N2")</div>
+                                <div class="product-meta">@product.Stock in stock</div>
+                            </div>
+                            <a asp-controller="Products" asp-action="Details"
+                               asp-route-id="@product.Id" class="view-product-btn">
+                                View <i class="fa-solid fa-arrow-right ms-1"></i>
+                            </a>
                         </div>
-                        <div class="product-seller">by @product.Seller?.Username</div>
-                    </div>
-                    <div class="card-footer-custom">
-                        <a asp-controller="Products" asp-action="Details"
-                           asp-route-id="@product.Id" class="btn-view">View Product</a>
                     </div>
                 </div>
-            </div>
-        }
-    </div>
-}
+            }
+        </div>
+    }
+</div>

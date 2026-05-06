@@ -1,139 +1,423 @@
 @model Lasamify.Models.User
 @{
     ViewData["Title"] = "My Profile";
+    Layout = "_Layout";
 }
 
-<div class="row g-4">
-    <div class="col-md-4">
-        <div class="card shadow-sm text-center p-4">
-            @if (!string.IsNullOrEmpty(Model?.ProfilePicturePath))
+<style>
+    :root {
+        --primary: #FFB703; 
+        --primary-hover: #FF9E00;
+        --primary-light: #FFF4D6;
+        --black: #0B0F19; 
+        --dark: #1C2434;
+        --gray: #64748B;
+        --light-border: #E2E8F0;
+        --bg-light: #F8FAFC;
+        --white: #FFFFFF;
+        --success: #10B981;
+    }
+
+    .profile-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 3rem 2rem;
+    }
+
+    .profile-header {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 3rem;
+        margin-bottom: 3rem;
+    }
+
+    .profile-card {
+        background: var(--white);
+        border: 1px solid var(--light-border);
+        border-radius: 12px;
+        padding: 2rem;
+        text-align: center;
+        box-shadow: 0 20px 40px rgba(11, 15, 25, 0.08);
+        height: fit-content;
+    }
+
+    .profile-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: var(--primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-size: 3rem;
+        color: var(--black);
+        font-weight: 700;
+        overflow: hidden;
+        border: 3px solid var(--primary-light);
+    }
+
+    .profile-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .profile-name {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 900;
+        color: var(--black);
+        margin-bottom: 0.5rem;
+    }
+
+    .profile-email {
+        color: var(--gray);
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .profile-role {
+        display: inline-block;
+        background: var(--primary);
+        color: var(--black);
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .member-since {
+        color: var(--gray);
+        font-size: 0.85rem;
+        padding: 1rem 0;
+        border-top: 1px solid var(--light-border);
+        border-bottom: 1px solid var(--light-border);
+        margin-bottom: 1.5rem;
+    }
+
+    .photo-upload {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .photo-upload input {
+        padding: 0.5rem;
+        border: 1px solid var(--light-border);
+        border-radius: 6px;
+        font-size: 0.9rem;
+    }
+
+    .btn-secondary {
+        background: var(--white);
+        color: var(--primary);
+        border: 1px solid var(--primary);
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        width: 100%;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .btn-secondary:hover {
+        background: var(--primary);
+        color: var(--black);
+    }
+
+    .content-section {
+        background: var(--white);
+        border: 1px solid var(--light-border);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(11, 15, 25, 0.08);
+        margin-bottom: 2rem;
+    }
+
+    .section-header {
+        background: var(--bg-light);
+        padding: 1.5rem;
+        border-bottom: 1px solid var(--light-border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .section-title {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: var(--black);
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .btn-primary {
+        background: var(--primary);
+        color: var(--black);
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-primary:hover {
+        background: var(--primary-hover);
+        transform: translateY(-2px);
+    }
+
+    .section-content {
+        padding: 2rem;
+    }
+
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .data-table thead {
+        background: var(--bg-light);
+    }
+
+    .data-table th {
+        padding: 1rem;
+        text-align: left;
+        font-weight: 700;
+        color: var(--black);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .data-table td {
+        padding: 1rem;
+        border-top: 1px solid var(--light-border);
+        color: var(--black);
+        font-size: 0.95rem;
+    }
+
+    .data-table tr:hover {
+        background: var(--bg-light);
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 0.5rem 0.75rem;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .badge-success {
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--success);
+    }
+
+    .badge-warning {
+        background: rgba(255, 183, 3, 0.1);
+        color: var(--primary-hover);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: var(--gray);
+    }
+
+    .empty-state i {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+
+    .delete-btn {
+        background: #EF4444;
+        color: var(--white);
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        transition: all 0.2s;
+    }
+
+    .delete-btn:hover {
+        background: #DC2626;
+    }
+
+    @@media (max-width: 768px) {
+        .profile-container { padding: 1.5rem; }
+        .profile-header { grid-template-columns: 1fr; gap: 2rem; }
+    }
+</style>
+
+<div class="profile-container">
+    <div class="profile-header">
+        <div class="profile-card">
+            <div class="profile-avatar">
+                @if (!string.IsNullOrEmpty(Model?.ProfilePicturePath))
+                {
+                    <img src="@Model.ProfilePicturePath" alt="@Model?.Username" />
+                }
+                else
+                {
+                    @Model?.Username?.FirstOrDefault()
+                }
+            </div>
+            <h2 class="profile-name">@Model?.Username</h2>
+            <p class="profile-email">@Model?.Email</p>
+            <div class="profile-role">
+                @if (Model?.Role == "Seller")
+                {
+                    <i class="fa-solid fa-store me-1"></i>
+                }
+                else
+                {
+                    <i class="fa-solid fa-shopping-cart me-1"></i>
+                }
+                @Model?.Role
+            </div>
+            <div class="member-since">
+                <i class="fa-solid fa-calendar me-1"></i> Member since @Model?.CreatedAt.ToString("MMMM yyyy")
+            </div>
+            <form method="post" enctype="multipart/form-data"
+                  asp-controller="Account" asp-action="UploadProfilePicture" class="photo-upload">
+                @Html.AntiForgeryToken()
+                <input type="file" name="profilePicture" accept="image/*" />
+                <button type="submit" class="btn-secondary">
+                    <i class="fa-solid fa-camera"></i> Update Photo
+                </button>
+            </form>
+        </div>
+
+        <div>
+            @if (Model?.Role == "Seller")
             {
-                <img src="@Model.ProfilePicturePath" class="rounded-circle mb-3 mx-auto"
-                     style="width:120px;height:120px;object-fit:cover;border:3px solid #ffc107" alt="Profile" />
-            }
-            else
-            {
-                <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mx-auto mb-3"
-                     style="width:120px;height:120px">
-                    <i class="fa-solid fa-user fa-3x text-white"></i>
+                <div class="content-section">
+                    <div class="section-header">
+                        <h3 class="section-title">
+                            <i class="fa-solid fa-tag"></i>My Listings <span style="color: var(--gray); font-size: 0.8rem;">(@Model?.Products.Count)</span>
+                        </h3>
+                        <a asp-controller="Products" asp-action="Create" class="btn-primary">
+                            <i class="fa-solid fa-plus"></i> Add Product
+                        </a>
+                    </div>
+                    <div class="section-content">
+                        @if (Model?.Products.Any() == true)
+                        {
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Product Name</th>
+                                        <th>Price</th>
+                                        <th>Stock</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var p in Model.Products)
+                                    {
+                                        <tr>
+                                            <td>@p.Name</td>
+                                            <td>₱@p.Price.ToString("N2")</td>
+                                            <td>@p.Stock units</td>
+                                            <td>
+                                                <span class="badge @(p.IsAvailable ? "badge-success" : "badge-warning")">
+                                                    @(p.IsAvailable ? "Active" : "Inactive")
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <form method="post" asp-controller="Products" asp-action="Delete" asp-route-id="@p.Id"
+                                                      style="display: inline;" onsubmit="return confirm('Remove this product?');">
+                                                    @Html.AntiForgeryToken()
+                                                    <button type="submit" class="delete-btn">
+                                                        <i class="fa-solid fa-trash"></i> Delete
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <div class="empty-state">
+                                <i class="fa-solid fa-box-open"></i>
+                                <p>No products listed yet.</p>
+                                <a asp-controller="Products" asp-action="Create" class="btn-primary" style="margin-top: 1rem;">
+                                    <i class="fa-solid fa-plus"></i> Create Your First Listing
+                                </a>
+                            </div>
+                        }
+                    </div>
                 </div>
             }
 
-            <h5 class="fw-bold">@Model?.Username</h5>
-            <p class="text-muted small mb-1">@Model?.Email</p>
-            <span class="badge @(Model?.Role == "Seller" ? "bg-warning text-dark" : "bg-info text-dark")">
-                @Model?.Role
-            </span>
-            <p class="text-muted small mt-2">
-                Member since @Model?.CreatedAt.ToString("MMMM yyyy")
-            </p>
-
-            <div class="mt-3">
-                <form method="post" enctype="multipart/form-data"
-                      asp-controller="Account" asp-action="UploadProfilePicture">
-                    @Html.AntiForgeryToken()
-                    <input type="file" name="profilePicture" class="form-control form-control-sm mb-2" accept="image/*" />
-                    <button type="submit" class="btn btn-outline-warning btn-sm w-100">
-                        <i class="fa-solid fa-camera me-1"></i>Update Photo
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-8">
-        <div class="card shadow-sm mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center bg-dark text-white">
-                <h6 class="mb-0"><i class="fa-solid fa-tags me-2"></i>My Listings (@Model?.Products.Count)</h6>
-                <a asp-controller="Products" asp-action="Create" class="btn btn-warning btn-sm">
-                    <i class="fa-solid fa-plus me-1"></i>Add Product
-                </a>
-            </div>
-            <div class="card-body p-0">
-                @if (Model?.Products.Any() == true)
-                {
-                    <table class="table table-hover mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Product</th>
-                                <th>Price</th>
-                                <th>Stock</th>
-                                <th>Status</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var p in Model.Products)
-                            {
+            <div class="content-section">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        <i class="fa-solid fa-receipt"></i> My Purchases <span style="color: var(--gray); font-size: 0.8rem;">(@Model?.BuyerTransactions.Count)</span>
+                    </h3>
+                </div>
+                <div class="section-content">
+                    @if (Model?.BuyerTransactions.Any() == true)
+                    {
+                        <table class="data-table">
+                            <thead>
                                 <tr>
-                                    <td>@p.Name</td>
-                                    <td>₱@p.Price.ToString("N2")</td>
-                                    <td>@p.Stock</td>
-                                    <td>
-                                        <span class="badge @(p.IsAvailable ? "bg-success" : "bg-secondary")">
-                                            @(p.IsAvailable ? "Active" : "Inactive")
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <form method="post" asp-controller="Products" asp-action="Delete" asp-route-id="@p.Id"
-                                              onsubmit="return confirm('Remove this product?')">
-                                            @Html.AntiForgeryToken()
-                                            <button class="btn btn-outline-danger btn-sm">
-                                                <i class="fa-solid fa-trash"></i>
-                                            </button>
-                                        </form>
-                                    </td>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>Total Amount</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
                                 </tr>
-                            }
-                        </tbody>
-                    </table>
-                }
-                else
-                {
-                    <p class="text-muted p-3 mb-0">No products listed yet.</p>
-                }
-            </div>
-        </div>
-
-        <div class="card shadow-sm">
-            <div class="card-header bg-dark text-white">
-                <h6 class="mb-0"><i class="fa-solid fa-receipt me-2"></i>My Purchases (@Model?.BuyerTransactions.Count)</h6>
-            </div>
-            <div class="card-body p-0">
-                @if (Model?.BuyerTransactions.Any() == true)
-                {
-                    <table class="table table-hover mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Product</th>
-                                <th>Qty</th>
-                                <th>Total</th>
-                                <th>Status</th>
-                                <th>Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var t in Model.BuyerTransactions.OrderByDescending(x => x.TransactionDate))
-                            {
-                                <tr>
-                                    <td>@t.Product?.Name</td>
-                                    <td>@t.Quantity</td>
-                                    <td>₱@t.TotalAmount.ToString("N2")</td>
-                                    <td>
-                                        <span class="badge @(t.Status == "Completed" ? "bg-success" : t.Status == "Cancelled" ? "bg-danger" : "bg-warning text-dark")">
-                                            @t.Status
-                                        </span>
-                                    </td>
-                                    <td class="small text-muted">@t.TransactionDate.ToString("MMM dd, yyyy")</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                }
-                else
-                {
-                    <p class="text-muted p-3 mb-0">No purchases yet.</p>
-                }
+                            </thead>
+                            <tbody>
+                                @foreach (var t in Model.BuyerTransactions.OrderByDescending(x => x.TransactionDate))
+                                {
+                                    <tr>
+                                        <td>@t.Product?.Name</td>
+                                        <td>@t.Quantity x</td>
+                                        <td><strong>₱@t.TotalAmount.ToString("N2")</strong></td>
+                                        <td>
+                                            <span class="badge @(t.Status == "Completed" ? "badge-success" : "badge-warning")">
+                                                @t.Status
+                                            </span>
+                                        </td>
+                                        <td>@t.TransactionDate.ToString("MMM dd, yyyy")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <div class="empty-state">
+                            <i class="fa-solid fa-shopping-bag"></i>
+                            <p>No purchases yet.</p>
+                            <a asp-controller="Home" asp-action="Index" class="btn-primary" style="margin-top: 1rem;">
+                                <i class="fa-solid fa-store"></i> Start Shopping
+                            </a>
+                        </div>
+                    }
+                </div>
             </div>
         </div>
     </div>
