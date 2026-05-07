@@ -17,16 +17,10 @@
         --white: #FFFFFF;
     }
 
-    body {
-        background: var(--bg-light) !important;
-        color: var(--black) !important;
-    }
-
     .container-marketplace {
         max-width: 1200px;
-        margin: 0 auto !important;
-        padding: 4rem 2rem !important;
-        background: var(--bg-light) !important;
+        margin: 0 auto;
+        width: 100%;
     }
 
     .marketplace-header {
@@ -96,16 +90,26 @@
         color: var(--black) !important;
     }
 
+    .search-bar form {
+        display: flex;
+        gap: 0;
+        width: 100%;
+    }
+
     .btn-search {
         background: var(--primary) !important;
         color: var(--black) !important;
         border: none !important;
-        padding: 1rem 2rem !important;
-        border-radius: 8px !important;
+        padding: 0.5rem 1.5rem !important;
+        border-radius: 0 8px 8px 0 !important;
         font-weight: 700 !important;
         cursor: pointer;
         transition: all 0.2s;
         box-shadow: 0 4px 14px rgba(255, 183, 3, 0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
     }
 
     .btn-search:hover {
@@ -168,80 +172,188 @@
 
     .products-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 2rem;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 2.5rem;
         margin-bottom: 3rem;
+        padding: 0;
+        perspective: 1200px;
     }
 
     .product-card {
         background: var(--white) !important;
         border-radius: 12px !important;
         border: 1px solid var(--light-border) !important;
-        overflow: hidden;
-        transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+        overflow: visible;
+        transition: transform 0.6s ease-in-out;
         display: flex;
         flex-direction: column;
         height: 100%;
-        box-shadow: none !important;
+        box-shadow: 0 2px 8px rgba(11, 15, 25, 0.08) !important;
+        position: relative;
+        z-index: 1;
+        transform-style: preserve-3d;
+        cursor: pointer;
     }
 
     .product-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 12px 24px rgba(11, 15, 25, 0.12) !important;
+        transform: rotateY(180deg);
+        z-index: 10;
+        box-shadow: 0 12px 32px rgba(11, 15, 25, 0.16) !important;
         border-color: var(--primary) !important;
+    }
+
+    /* Front side */
+    .product-card-front {
+        backface-visibility: hidden;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow: hidden;
+        border-radius: 12px;
+    }
+
+    /* Back side */
+    .product-card-back {
+        backface-visibility: hidden;
+        transform: rotateY(180deg);
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        padding: 1.5rem;
+        justify-content: center;
+        text-align: center;
+        background: linear-gradient(135deg, var(--primary-light) 0%, rgba(255, 183, 3, 0.05) 100%);
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 12px;
+    }
+
+    .product-card-back h3 {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: var(--black);
+        margin: 0 0 1rem 0;
+    }
+
+    .product-card-back p {
+        font-size: 0.85rem;
+        color: var(--gray);
+        line-height: 1.6;
+        margin: 0 0 1.5rem 0;
+        flex-grow: 1;
+    }
+
+    .product-card-back-actions {
+        display: flex;
+        gap: 0.75rem;
+        flex-direction: column;
+    }
+
+    .product-card-back-btn {
+        background: var(--primary) !important;
+        color: var(--black) !important;
+        border: none !important;
+        padding: 0.7rem 1rem !important;
+        border-radius: 6px !important;
+        font-weight: 700 !important;
+        text-decoration: none !important;
+        transition: all 0.2s;
+        font-size: 0.85rem;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .product-card-back-btn:hover {
+        background: var(--primary-hover) !important;
+        transform: translateY(-2px);
+    }
+
+    .product-card-back-btn.secondary {
+        background: var(--dark) !important;
+        color: var(--white) !important;
+    }
+
+    .product-card-back-btn.secondary:hover {
+        background: var(--black) !important;
     }
 
     .product-image-wrapper {
         width: 100%;
-        height: 200px;
+        height: 220px;
         overflow: hidden;
-        background: var(--bg-light);
+        background: linear-gradient(135deg, var(--bg-light) 0%, #f0f0f0 100%);
         display: flex;
         align-items: center;
         justify-content: center;
+        flex-shrink: 0;
+        position: relative;
+    }
+
+    .product-image-wrapper a {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
     }
 
     .product-img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.3s;
+        transition: transform 0.3s ease-in-out;
+        display: block;
     }
 
     .product-card:hover .product-img {
-        transform: scale(1.05);
+        transform: scale(1.08);
     }
 
     .product-img-placeholder {
         color: var(--gray);
         font-size: 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
     }
 
     .product-info {
-        padding: 1.25rem;
+        padding: 1.5rem;
         flex: 1;
         display: flex;
         flex-direction: column;
+        gap: 0.75rem;
     }
 
     .product-category {
-        font-size: 0.75rem;
-        font-weight: 700;
+        font-size: 0.7rem;
+        font-weight: 800;
         text-transform: uppercase;
         color: var(--primary);
-        margin-bottom: 0.5rem;
-        letter-spacing: 0.5px;
+        margin: 0 !important;
+        letter-spacing: 0.7px;
     }
 
     .product-name {
         font-family: 'Outfit', sans-serif;
-        font-size: 1rem;
+        font-size: 1.05rem;
         font-weight: 700;
         color: var(--black) !important;
-        margin: 0 0 0.5rem 0 !important;
+        margin: 0 !important;
         text-decoration: none !important;
         display: block;
         transition: color 0.2s;
+        line-height: 1.4;
     }
 
     .product-card:hover .product-name {
@@ -252,47 +364,55 @@
         font-size: 0.85rem;
         color: var(--gray);
         line-height: 1.5;
-        margin-bottom: 1rem !important;
+        margin: 0 !important;
         flex-grow: 1;
     }
 
     .product-footer {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-end;
+        gap: 1rem;
         padding-top: 1rem;
+        margin-top: auto;
         border-top: 1px solid var(--light-border);
     }
 
     .product-price {
         font-family: 'Outfit', sans-serif;
-        font-size: 1.25rem;
+        font-size: 1.35rem;
         font-weight: 900;
         color: var(--primary-hover);
+        line-height: 1;
     }
 
     .product-meta {
-        text-align: right;
         font-size: 0.8rem;
         color: var(--gray);
+        margin-top: 0.25rem;
     }
 
     .view-product-btn {
         background: transparent !important;
-        border: 1px solid var(--primary) !important;
+        border: 1.5px solid var(--primary) !important;
         color: var(--primary) !important;
-        padding: 0.5rem 1rem !important;
+        padding: 0.55rem 1.1rem !important;
         border-radius: 6px !important;
         font-size: 0.85rem;
         font-weight: 600;
         text-decoration: none !important;
         transition: all 0.2s;
         text-align: center;
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
     }
 
     .view-product-btn:hover {
         background: var(--primary) !important;
         color: var(--black) !important;
+        transform: translateX(2px);
     }
 
     .empty-state {
@@ -344,7 +464,19 @@
         .marketplace-header h1 { font-size: 1.75rem; }
         .btn-list-product { text-align: center; }
         .search-bar { flex-direction: column; }
-        .products-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; }
+        .products-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1.5rem; }
+        .product-image-wrapper { height: 160px; }
+        .product-info { padding: 1rem; }
+    }
+
+    @@media (max-width: 480px) {
+        .products-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; }
+        .product-image-wrapper { height: 140px; }
+        .product-img-placeholder { font-size: 2rem; }
+        .product-info { padding: 0.75rem; gap: 0.5rem; }
+        .product-name { font-size: 0.9rem; }
+        .product-price { font-size: 1.1rem; }
+        .view-product-btn { padding: 0.4rem 0.75rem !important; font-size: 0.75rem; }
     }
 </style>
 
@@ -366,7 +498,7 @@
                 }
             </h1>
         </div>
-        @if (User.Identity?.IsAuthenticated == true)
+        @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Seller"))
         {
             <a asp-controller="Products" asp-action="Create" class="btn-list-product">
                 <i class="fa-solid fa-plus me-2"></i>List a Product
@@ -376,7 +508,7 @@
 
     <div class="search-bar">
         <div class="search-input-wrapper">
-            <form method="get" asp-controller="Home" asp-action="Index" class="d-flex gap-0" style="width:100%;">
+            <form method="get" asp-controller="Home" asp-action="Index">
                 <input class="search-input" type="search" name="search"
                        placeholder="Search products, categories..." value="@Model.SearchQuery" style="border-radius:8px 0 0 8px; flex:1;" />
                 <button class="btn-search" type="submit" style="border-radius:0 8px 8px 0;">
@@ -452,37 +584,58 @@
             @foreach (var product in Model.Products)
             {
                 <div class="product-card">
-                    <a asp-controller="Products" asp-action="Details" asp-route-id="@product.Id" class="product-image-wrapper">
-                        @if (!string.IsNullOrEmpty(product.ImagePath))
-                        {
-                            <img src="@product.ImagePath" class="product-img" alt="@product.Name" />
-                        }
-                        else
-                        {
-                            <div class="product-img-placeholder">
-                                <i class="fa-solid fa-image"></i>
-                            </div>
-                        }
-                    </a>
-                    <div class="product-info">
-                        <div class="product-category">@product.Category</div>
-                        <a asp-controller="Products" asp-action="Details"
-                           asp-route-id="@product.Id" class="product-name">@product.Name</a>
-                        <p class="product-desc">
-                            @(string.IsNullOrEmpty(product.Description) ? "No description" : 
-                                (product.Description.Length > 75
-                                    ? product.Description[..75] + "..."
-                                    : product.Description))
-                        </p>
-                        <div class="product-footer">
-                            <div>
-                                <div class="product-price">₱@product.Price.ToString("N2")</div>
-                                <div class="product-meta">@product.Stock in stock</div>
-                            </div>
-                            <a asp-controller="Products" asp-action="Details"
-                               asp-route-id="@product.Id" class="view-product-btn">
-                                View <i class="fa-solid fa-arrow-right ms-1"></i>
+                    <!-- Front side -->
+                    <div class="product-card-front">
+                        <div class="product-image-wrapper">
+                            <a asp-controller="Products" asp-action="Details" asp-route-id="@product.Id" style="display: contents;">
+                                @if (!string.IsNullOrEmpty(product.ImagePath))
+                                {
+                                    <img src="@product.ImagePath" class="product-img" alt="@product.Name" />
+                                }
+                                else
+                                {
+                                    <div class="product-img-placeholder">
+                                        <i class="fa-solid fa-image"></i>
+                                    </div>
+                                }
                             </a>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-category">@product.Category</div>
+                            <a asp-controller="Products" asp-action="Details"
+                               asp-route-id="@product.Id" class="product-name">@product.Name</a>
+                            <p class="product-desc">
+                                @(string.IsNullOrEmpty(product.Description) ? "No description" : 
+                                    (product.Description.Length > 75
+                                        ? product.Description[..75] + "..."
+                                        : product.Description))
+                            </p>
+                            <div class="product-footer">
+                                <div>
+                                    <div class="product-price">₱@product.Price.ToString("N2")</div>
+                                    <div class="product-meta">@product.Stock in stock</div>
+                                </div>
+                                <a asp-controller="Products" asp-action="Details"
+                                   asp-route-id="@product.Id" class="view-product-btn">
+                                    View <i class="fa-solid fa-arrow-right ms-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Back side -->
+                    <div class="product-card-back">
+                        <h3>Quick Look</h3>
+                        <p>
+                            @(string.IsNullOrEmpty(product.Description) ? "High-quality product in stock and ready to ship!" : product.Description)
+                        </p>
+                        <div class="product-card-back-actions">
+                            <a asp-controller="Products" asp-action="Details" asp-route-id="@product.Id" class="product-card-back-btn">
+                                <i class="fa-solid fa-arrow-right"></i> View Details
+                            </a>
+                            <button type="button" class="product-card-back-btn secondary" onclick="addToCart(@product.Id)">
+                                <i class="fa-solid fa-shopping-cart"></i> Add to Cart
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -490,3 +643,11 @@
         </div>
     }
 </div>
+
+<script>
+    function addToCart(productId) {
+        // Send product to cart (basic implementation)
+        alert(`Product ${productId} added to cart!`);
+        // In a real app, you would send this to the server or update a cart session
+    }
+</script>
