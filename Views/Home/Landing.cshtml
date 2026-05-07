@@ -3,7 +3,6 @@
     ViewData["Title"] = "Lasamify - Your Local Marketplace";
     Layout = null;
 
-    // Safely grab the products passed from the controller
     var displayProducts = Model?.ToList() ?? new List<Lasamify.Models.Product>();
 }
 <!DOCTYPE html>
@@ -13,7 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lasamify — Your Local Marketplace</title>
     <link rel="icon" type="image/jpeg" href="~/favicon/favicon.jpg" />
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=DM+Sans:wght@400;500;700;800&display=swap" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -21,164 +20,266 @@
         :root {
             --primary: #FFB703; 
             --primary-hover: #FF9E00;
-            --primary-light: #FFF4D6;
-            
-            --black: #0B0F19; 
-            --dark: #1C2434;
+            --black: #070A11; 
             --gray: #64748B;
-            --light-border: #E2E8F0;
-            --bg-light: #F8FAFC;
+            --gray-light: #94A3B8;
             --white: #FFFFFF;
+
+            --glass-light-bg: rgba(255, 255, 255, 0.85);
+            --glass-light-border: rgba(255, 255, 255, 0.6);
+            --glass-light-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+
+            --glass-dark-bg: rgba(11, 15, 25, 0.88);
+            --glass-dark-border: rgba(255, 255, 255, 0.12);
+            --glass-dark-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
         }
 
         body {
             font-family: 'DM Sans', sans-serif;
-            background: var(--bg-light);
             color: var(--black);
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
+            background: var(--white);
         }
 
-        h1, h2, h3, .logo { font-family: 'Outfit', sans-serif; }
+        h1, h2, h3, h4, h5, .logo, .step-num { 
+            font-family: 'Outfit', sans-serif; 
+        }
 
-        /* --- NAVIGATION --- */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 2.5rem;
+            border-radius: 8px; 
+            font-weight: 800;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--black);
+            box-shadow: 0 4px 14px rgba(255, 183, 3, 0.3);
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 183, 3, 0.4);
+            color: var(--black);
+        }
+
+        .btn-outline-dark {
+            background: transparent;
+            color: var(--black);
+            border: 2px solid var(--black);
+        }
+        .btn-outline-dark:hover {
+            background: var(--black);
+            color: var(--white);
+            transform: translateY(-3px);
+        }
+
+        .btn-outline-light {
+            background: transparent;
+            color: var(--white);
+            border: 2px solid var(--white);
+        }
+        .btn-outline-light:hover {
+            background: var(--white);
+            color: var(--black);
+            transform: translateY(-3px);
+        }
+
+        .glass-panel-light {
+            background: var(--glass-light-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-light-border);
+            border-radius: 16px;
+            box-shadow: var(--glass-light-shadow);
+        }
+
+        .glass-panel-dark {
+            background: var(--glass-dark-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-dark-border);
+            border-radius: 16px;
+            box-shadow: var(--glass-dark-shadow);
+        }
+
+        .section-label { 
+            font-size: 0.85rem; 
+            font-weight: 800; 
+            letter-spacing: 2px; 
+            text-transform: uppercase; 
+            color: var(--primary); 
+            margin-bottom: 1rem; 
+            display: block; 
+        }
+
+        .section-relative {
+            position: relative;
+            z-index: 1; 
+        }
+        
+        .bg-light-gif-container {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            display: flex;
+        }
+
+        .bg-light-gif-left {
+            width: 50%; height: 100%;
+            background: url('/images/light-bg3.gif') top left;
+            background-size: 100% auto;
+            background-repeat: repeat-y;
+        }
+
+        .bg-light-gif-right {
+            width: 50%; height: 100%;
+            background: url('/images/light-bg3.gif') top left;
+            background-size: 100% auto;
+            background-repeat: repeat-y;
+            transform: scaleX(-1);
+        }
+
+        .bg-dark-gif {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('/images/dark-bg.gif') center top;
+            background-size: 100% auto;
+            background-repeat: no-repeat;
+            z-index: -1;
+        }
+
         nav {
             display: flex; justify-content: space-between; align-items: center;
             padding: 1.2rem 4rem; position: sticky; top: 0;
-            background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--light-border); z-index: 100;
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(0,0,0,0.05); z-index: 100;
         }
         .logo { font-size: 1.75rem; font-weight: 900; color: var(--black); letter-spacing: -0.5px; text-decoration: none; display: flex; align-items: center; gap: 8px; }
-        .logo-dot { width: 12px; height: 12px; background: var(--primary); border-radius: 50%; display: inline-block; }
+        .logo i { color: var(--primary); font-size: 1.2rem; }
         .nav-links { display: flex; gap: 2.5rem; align-items: center; }
-        .nav-links a { color: var(--gray); text-decoration: none; font-size: 0.95rem; font-weight: 500; transition: color 0.2s; }
-        .nav-links a:hover { color: var(--black); }
-        .nav-cta { background: var(--black) !important; color: var(--white) !important; padding: 0.6rem 1.5rem; border-radius: 8px; font-weight: 600 !important; transition: transform 0.2s, background 0.2s !important; }
+        .nav-links a { color: var(--gray); text-decoration: none; font-size: 0.95rem; font-weight: 700; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--primary); }
+        
+        .nav-cta { 
+            background: var(--black) !important; color: var(--white) !important; 
+            padding: 0.6rem 1.5rem; border-radius: 8px; font-weight: 700 !important; 
+            transition: all 0.2s !important; 
+        }
         .nav-cta:hover { background: var(--primary) !important; color: var(--black) !important; transform: translateY(-2px); }
 
-        /* --- HERO SECTION --- */
         .hero {
             min-height: 90vh; display: flex; align-items: center;
-            padding: 4rem; position: relative; background: var(--bg-light); overflow: hidden;
+            padding: 4rem; 
         }
-        .hero-grid { position: absolute; inset: 0; background-image: radial-gradient(var(--gray) 1px, transparent 1px); background-size: 40px 40px; opacity: 0.15; pointer-events: none; }
         
-        /* The new glowing orb to reduce empty white space on the right */
-        .hero-blob {
-            position: absolute; right: -5%; top: 50%; transform: translateY(-50%);
-            width: 700px; height: 700px;
-            background: radial-gradient(circle, rgba(255,183,3,0.15) 0%, transparent 70%);
-            border-radius: 50%; z-index: 1; pointer-events: none;
+        .hero-inner {
+            display: flex; justify-content: space-between; align-items: center;
+            width: 100%; max-width: 1400px; margin: 0 auto; gap: 4rem;
         }
 
-        .hero-content { max-width: 600px; position: relative; z-index: 2; }
-        .hero-tag { display: inline-flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--black); background: var(--primary-light); padding: 0.5rem 1rem; border-radius: 50px; margin-bottom: 1.5rem; }
-        .hero-tag i { color: var(--primary-hover); }
-        h1 { font-size: clamp(3.5rem, 6vw, 5.5rem); font-weight: 900; line-height: 1.05; color: var(--black); margin-bottom: 1.5rem; letter-spacing: -1px; }
-        h1 span { position: relative; display: inline-block; }
-        h1 span::after { content: ''; position: absolute; bottom: 8px; left: 0; width: 100%; height: 12px; background: var(--primary); z-index: -1; transform: skewX(-15deg); }
-        .hero-desc { font-size: 1.15rem; color: var(--gray); line-height: 1.7; max-width: 500px; margin-bottom: 2.5rem; }
+        .hero-content { flex: 1; max-width: 650px; padding: 3rem; }
+        .hero-tag { display: inline-flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--black); background: var(--primary); padding: 0.6rem 1.25rem; border-radius: 50px; margin-bottom: 1.5rem; }
+        h1 { font-size: clamp(3rem, 5vw, 5.5rem); font-weight: 900; line-height: 1.05; color: var(--black); margin-bottom: 1.5rem; letter-spacing: -1px; }
+        h1 span { color: var(--primary); }
+        .hero-desc { font-size: 1.15rem; color: var(--gray); line-height: 1.7; margin-bottom: 2.5rem; font-weight: 600; }
         .hero-actions { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
-        .btn-primary { background: var(--primary); color: var(--black); padding: 1rem 2.5rem; border-radius: 8px; font-weight: 700; font-size: 1rem; text-decoration: none; transition: all 0.2s; box-shadow: 0 4px 14px rgba(255, 183, 3, 0.4); }
-        .btn-primary:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255, 183, 3, 0.5); }
-        .btn-ghost { color: var(--black); padding: 1rem 2.5rem; border-radius: 8px; font-weight: 600; font-size: 1rem; text-decoration: none; background: var(--white); border: 1px solid var(--light-border); transition: all 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
-        .btn-ghost:hover { border-color: var(--black); transform: translateY(-2px); }
 
-        /* --- HERO VISUAL (Dynamic Product Cards) --- */
-        .hero-visual { position: absolute; right: 5rem; top: 50%; transform: translateY(-50%); width: 450px; height: 500px; z-index: 2; }
-        
+        .hero-visual { flex: 1; position: relative; height: 550px; max-width: 500px; }
         .mock-card {
-            background: var(--white); border-radius: 16px; padding: 1rem;
-            box-shadow: 0 20px 40px rgba(11, 15, 25, 0.08); border: 1px solid var(--light-border);
-            position: absolute; width: 240px; transition: transform 0.3s;
-            animation: float 6s ease-in-out infinite; cursor: pointer; text-decoration: none; color: inherit; display: block;
+            padding: 1.25rem;
+            position: absolute; width: 280px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer; text-decoration: none; color: inherit; display: block;
+            animation: float 6s ease-in-out infinite;
         }
-        .mock-card:hover { transform: translateY(-10px) scale(1.02) !important; z-index: 10 !important; box-shadow: 0 25px 50px rgba(255, 183, 3, 0.2); border-color: var(--primary); }
+        .mock-card:hover { transform: translateY(-15px) scale(1.05) !important; z-index: 10 !important; border-color: var(--primary); box-shadow: 0 25px 50px rgba(255, 183, 3, 0.25); }
         
         .mock-card-1 { top: 0; right: 0; z-index: 3; animation-delay: 0s; }
-        .mock-card-2 { bottom: 20px; left: 0; z-index: 2; animation-delay: -2s; }
-        .mock-card-3 { top: 120px; right: 180px; z-index: 1; animation-delay: -4s; transform: scale(0.9); opacity: 0.9; }
+        .mock-card-2 { bottom: 30px; left: 0; z-index: 2; animation-delay: -2s; }
+        .mock-card-3 { top: 140px; right: 180px; z-index: 1; transform: scale(0.9); opacity: 0.95; animation-delay: -4s; }
         
-        .mc-img { height: 160px; background: var(--bg-light); border-radius: 8px; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: var(--gray); overflow: hidden; }
+        .mc-img { height: 180px; background: rgba(0,0,0,0.04); border-radius: 8px; margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: var(--gray); overflow: hidden; }
         .mc-img img { width: 100%; height: 100%; object-fit: cover; }
-        .mc-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.25rem; color: var(--black); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .mc-price { color: var(--primary-hover); font-weight: 800; font-size: 1.1rem; }
-        .mc-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; font-size: 0.75rem; color: var(--gray); }
-        .mc-btn { background: var(--black); color: var(--white); border-radius: 4px; padding: 4px 12px; font-weight: 600; transition: background 0.2s; }
+        .mc-title { font-weight: 900; font-size: 1.1rem; margin-bottom: 0.25rem; color: var(--black); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: 'Outfit', sans-serif;}
+        .mc-price { color: var(--primary-hover); font-weight: 900; font-size: 1.35rem; font-family: 'Outfit', sans-serif;}
+        .mc-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; font-size: 0.85rem; color: var(--gray); font-weight: 800; }
+        .mc-btn { background: var(--black); color: var(--white); border-radius: 6px; padding: 6px 16px; font-weight: 700; transition: background 0.2s; }
         .mock-card:hover .mc-btn { background: var(--primary); color: var(--black); }
 
-        /* --- FEATURES SECTION --- */
-        .features-section { background: var(--black); padding: 7rem 4rem; color: var(--white); }
-        .features-inner { max-width: 1200px; margin: 0 auto; }
+        .features-section { padding: 7rem 4rem; color: var(--white); }
+        .features-inner { max-width: 1200px; margin: 0 auto; position: relative; z-index: 2; }
         .section-header { text-align: center; margin-bottom: 4rem; }
-        .section-label { font-size: 0.85rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--primary); margin-bottom: 1rem; display: block; }
-        .section-title { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; color: var(--white); line-height: 1.2; }
-        .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
-        .feature-item { background: var(--dark); padding: 2.5rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); transition: transform 0.3s, border-color 0.3s; }
-        .feature-item:hover { transform: translateY(-5px); border-color: rgba(255, 183, 3, 0.3); }
-        .feature-icon { width: 54px; height: 54px; background: rgba(255, 183, 3, 0.1); color: var(--primary); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; font-size: 1.5rem; }
-        .feature-title { font-size: 1.25rem; font-family: 'Outfit', sans-serif; font-weight: 700; margin-bottom: 0.75rem; }
-        .feature-desc { font-size: 0.95rem; color: #94A3B8; line-height: 1.7; }
-
-        /* --- HOW IT WORKS --- */
-        .how-section { padding: 7rem 4rem; background: var(--white); position: relative; z-index: 1; }
-        /* A subtle geometric background graphic to fill the whitespace */
-        .how-section::before { content: ''; position: absolute; top: 0; left: 0; width: 35%; height: 100%; background: var(--primary-light); opacity: 0.4; border-radius: 0 150px 150px 0; z-index: -1; }
-
-        .how-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
-        .steps { margin-top: 3rem; }
-        .step { display: flex; gap: 1.5rem; margin-bottom: 2.5rem; position: relative; }
-        .step::after { content: ''; position: absolute; left: 24px; top: 55px; bottom: -30px; width: 2px; background: var(--light-border); z-index: 1; }
-        .step:last-child::after { display: none; }
-        .step-num { width: 50px; height: 50px; background: var(--primary); color: var(--black); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Outfit', sans-serif; font-size: 1.5rem; font-weight: 800; flex-shrink: 0; z-index: 2; position: relative; }
-        .step-content { padding-top: 10px; }
-        .step-title { font-size: 1.2rem; font-weight: 700; color: var(--black); margin-bottom: 0.5rem; }
-        .step-desc { font-size: 1rem; color: var(--gray); line-height: 1.6; }
+        .section-title { font-size: clamp(2.5rem, 4vw, 3.5rem); font-weight: 900; color: var(--white); line-height: 1.2; }
+        .section-title-light { font-size: clamp(2.5rem, 4vw, 3.5rem); font-weight: 900; color: var(--black); line-height: 1.2; }
         
-        .mockup-dashboard { background: var(--white); border: 1px solid var(--light-border); border-radius: 16px; padding: 1.5rem; box-shadow: 0 25px 50px -12px rgba(255, 183, 3, 0.15); position: relative; }
-        .md-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--light-border); }
-        .md-user { display: flex; gap: 10px; align-items: center; font-weight: 700; font-size: 0.9rem; }
-        .md-avatar { width: 32px; height: 32px; background: var(--black); border-radius: 50%; color: var(--white); display: flex; align-items: center; justify-content: center; }
-        .md-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
-        .md-stat-box { background: var(--bg-light); padding: 1rem; border-radius: 8px; border: 1px solid var(--light-border); }
-        .md-stat-label { font-size: 0.75rem; color: var(--gray); text-transform: uppercase; font-weight: 700; }
-        .md-stat-val { font-size: 1.5rem; font-weight: 800; color: var(--black); margin-top: 0.25rem; }
-        .md-list { background: var(--white); border-radius: 8px; border: 1px solid var(--light-border); overflow: hidden; }
-        .md-item { padding: 1rem; border-bottom: 1px solid var(--light-border); display: flex; justify-content: space-between; align-items: center; }
-        .md-item:last-child { border-bottom: none; }
-        .md-item-info { display: flex; gap: 12px; align-items: center; }
-        .md-item-icon { width: 40px; height: 40px; background: var(--bg-light); border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+        .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem; }
+        .feature-item { padding: 3rem 2.5rem; transition: transform 0.4s, border-color 0.4s; }
+        .feature-item:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 25px 50px rgba(0,0,0,0.6); }
+        .feature-icon { width: 64px; height: 64px; background: rgba(255, 183, 3, 0.15); color: var(--primary); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.75rem; font-size: 2rem; }
+        .feature-title { font-size: 1.4rem; font-weight: 800; margin-bottom: 1rem; color: var(--white); font-family: 'Outfit', sans-serif;}
+        .feature-desc { font-size: 1.05rem; color: var(--gray-light); line-height: 1.7; font-weight: 500;}
 
-        /* --- CTA SECTION --- */
-        .cta-section { background: var(--black); padding: 6rem 4rem; text-align: center; position: relative; overflow: hidden; }
-        .cta-bg { position: absolute; top: -50%; left: 50%; transform: translateX(-50%); width: 800px; height: 800px; background: radial-gradient(circle, rgba(255,183,3,0.1) 0%, transparent 70%); pointer-events: none; }
-        .cta-inner { max-width: 600px; margin: 0 auto; position: relative; z-index: 2; }
-        .cta-inner h2 { font-size: clamp(2.5rem, 4vw, 3.5rem); font-weight: 900; color: var(--white); margin-bottom: 1.5rem; line-height: 1.1; }
-        .cta-inner p { color: #94A3B8; font-size: 1.15rem; margin-bottom: 2.5rem; line-height: 1.7; }
-        .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .how-section { padding: 7rem 4rem; }
+        .how-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; position: relative; z-index: 2; }
+        
+        .how-text-panel { padding: 4rem; }
+        .steps { margin-top: 3.5rem; }
+        .step { display: flex; gap: 1.5rem; margin-bottom: 2.5rem; position: relative; }
+        .step::after { content: ''; position: absolute; left: 24px; top: 55px; bottom: -30px; width: 3px; background: var(--primary); opacity: 0.4; z-index: 1; }
+        .step:last-child::after { display: none; }
+        .step-num { width: 50px; height: 50px; background: var(--primary); color: var(--black); clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 900; flex-shrink: 0; z-index: 2; position: relative; }
+        .step-content { padding-top: 5px; }
+        .step-title { font-size: 1.3rem; font-weight: 900; color: var(--black); margin-bottom: 0.5rem; font-family: 'Outfit', sans-serif;}
+        .step-desc { font-size: 1.05rem; color: var(--gray); line-height: 1.6; font-weight: 600; }
+        
+        .mockup-dashboard { width: 100%; padding: 3rem; }
+        .md-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(0,0,0,0.1); }
+        .md-user { display: flex; gap: 12px; align-items: center; font-weight: 900; font-size: 1.1rem; color: var(--black); font-family: 'Outfit', sans-serif;}
+        .md-avatar { width: 40px; height: 40px; background: var(--black); border-radius: 8px; color: var(--white); display: flex; align-items: center; justify-content: center; }
+        .md-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+        .md-stat-box { background: rgba(255,255,255,0.6); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(0,0,0,0.05); }
+        .md-stat-label { font-size: 0.85rem; color: var(--gray); text-transform: uppercase; font-weight: 800; }
+        .md-stat-val { font-size: 2rem; font-weight: 900; color: var(--black); margin-top: 0.25rem; font-family: 'Outfit', sans-serif;}
 
-        footer { background: var(--black); border-top: 1px solid rgba(255,255,255,0.05); padding: 2rem 4rem; display: flex; justify-content: space-between; align-items: center; }
-        .footer-logo { display: flex; align-items: center; gap: 8px; font-family: 'Outfit', sans-serif; font-size: 1.25rem; font-weight: 800; color: var(--white); text-decoration: none; }
-        .footer-copy { font-size: 0.85rem; color: var(--gray); }
+        .cta-section { padding: 8rem 4rem; text-align: center; }
+        .cta-inner { max-width: 800px; margin: 0 auto; position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; padding: 5rem 3rem;}
+        .cta-inner h2 { font-size: clamp(3rem, 5vw, 4.5rem); font-weight: 900; color: var(--white); margin-bottom: 1.5rem; line-height: 1.1; }
+        .cta-inner p { color: var(--gray-light); font-size: 1.25rem; margin-bottom: 3.5rem; line-height: 1.7; font-weight: 500; text-align: center; }
+        .cta-buttons { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; }
 
-        @@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-        @@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .hero-content > * { animation: fadeUp 0.6s ease both; }
-        .hero-tag { animation-delay: 0.1s; }
-        .hero h1 { animation-delay: 0.2s; }
-        .hero-desc { animation-delay: 0.3s; }
-        .hero-actions { animation-delay: 0.4s; }
+        footer { background: #05070D; padding: 2.5rem 4rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.05); }
+        .footer-logo { display: flex; align-items: center; gap: 8px; font-size: 1.35rem; font-weight: 900; color: var(--white); text-decoration: none; font-family: 'Outfit', sans-serif;}
+        .footer-logo i { color: var(--primary); }
+        .footer-copy { font-size: 0.95rem; color: var(--gray); font-weight: 600; }
+
+        @@keyframes float { 
+            0%, 100% { transform: translateY(0); } 
+            50% { transform: translateY(-15px); } 
+        }
 
         @@media (max-width: 1024px) {
+            .hero-inner { flex-direction: column; text-align: center; }
             .hero-visual { display: none; }
-            nav { padding: 1rem 1.5rem; }
-            .hero { padding: 4rem 1.5rem; text-align: center; }
-            .hero-content { margin: 0 auto; }
+            .hero-content { margin: 0 auto; padding: 2rem;}
             .hero-actions { justify-content: center; }
-            .features-section, .how-section, .cta-section { padding: 4rem 1.5rem; }
+            nav { padding: 1.5rem 2rem; }
+            .features-section, .how-section, .cta-section { padding: 5rem 2rem; }
             .how-inner { grid-template-columns: 1fr; gap: 4rem; }
-            footer { padding: 1.5rem; flex-direction: column; gap: 1rem; text-align: center; }
-            .features-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+            .features-grid { grid-template-columns: 1fr; gap: 2rem; }
+            footer { padding: 2.5rem 2rem; flex-direction: column; gap: 1.5rem; text-align: center; }
+            .how-text-panel { padding: 2rem; }
+            .mockup-dashboard { padding: 2rem; }
+            .bg-light-gif-container { flex-direction: column; }
+            .bg-light-gif-left, .bg-light-gif-right { width: 100%; height: 50%; }
         }
     </style>
 </head>
@@ -186,7 +287,7 @@
 
 <nav>
     <a class="logo" asp-controller="Home" asp-action="Index">
-        <span class="logo-dot"></span> Lasamify
+        <i class="fa-solid fa-cube"></i> Lasamify
     </a>
     <div class="nav-links">
         <a asp-controller="Home" asp-action="Index">Marketplace</a>
@@ -204,92 +305,96 @@
     </div>
 </nav>
 
-<section class="hero">
-    <div class="hero-grid"></div>
-    <div class="hero-blob"></div>
-
-    <div class="hero-content">
-        <div class="hero-tag">
-            <i class="fa-solid fa-bolt"></i> Local E-Commerce
-        </div>
-        <h1>Buy &amp; Sell<br/>with <span>Lasamify</span></h1>
-        <p class="hero-desc">
-            Your trusted community marketplace. Post products, find great deals,
-            and connect with buyers and sellers near you in seconds.
-        </p>
-        <div class="hero-actions">
-            <a asp-controller="Home" asp-action="Index" class="btn-primary">
-                Start Shopping <i class="fa-solid fa-arrow-right ms-2"></i>
-            </a>
-            <a asp-controller="Account" asp-action="Register" class="btn-ghost">
-                Become a Seller
-            </a>
-        </div>
+<section class="hero section-relative">
+    <div class="bg-light-gif-container">
+        <div class="bg-light-gif-left"></div>
+        <div class="bg-light-gif-right"></div>
     </div>
 
-    <!-- Visual Database Injection -->
-    <div class="hero-visual">
-        @for (int i = 1; i <= 3; i++)
-        {
-            if (displayProducts.Count >= i)
-            {
-                var p = displayProducts[i - 1];
-                var avgRating = p.Reviews.Any() ? Math.Round(p.Reviews.Average(r => r.Rating), 1).ToString("0.0") : "New";
+    <div class="hero-inner">
+        <div class="hero-content glass-panel-light">
+            <div class="hero-tag">
+                <i class="fa-solid fa-bolt"></i> Local E-Commerce
+            </div>
+            <h1>Buy &amp; Sell<br/>with <span>Lasamify</span></h1>
+            <p class="hero-desc">
+                Your trusted community marketplace. Post products, find great deals,
+                and connect with buyers and sellers near you in seconds.
+            </p>
+            <div class="hero-actions">
+                <a asp-controller="Home" asp-action="Index" class="btn btn-primary">
+                    Start Shopping <i class="fa-solid fa-arrow-right ms-2"></i>
+                </a>
+                <a asp-controller="Account" asp-action="Register" class="btn btn-outline-dark">
+                    <span>Become a Seller</span>
+                </a>
+            </div>
+        </div>
 
-                <a href="@Url.Action("Details", "Products", new { id = p.Id })" class="mock-card mock-card-@i">
-                    <div class="mc-img">
-                        @if (!string.IsNullOrEmpty(p.ImagePath))
-                        {
-                            <img src="@p.ImagePath" alt="@p.Name" />
-                        }
-                        else
-                        {
-                            <i class="fa-solid fa-image"></i>
-                        }
-                    </div>
-                    <div class="mc-title">@p.Name</div>
-                    <div class="mc-price">₱@p.Price.ToString("N2")</div>
-                    <div class="mc-footer">
-                        <span><i class="fa-solid fa-star text-warning"></i> @avgRating</span>
-                        <span class="mc-btn">Buy</span>
-                    </div>
-                </a>
-            }
-            else
+        <div class="hero-visual">
+            @for (int i = 1; i <= 3; i++)
             {
-                <!-- Fallback card if the database has less than 3 items -->
-                <a asp-controller="Products" asp-action="Create" class="mock-card mock-card-@i">
-                    <div class="mc-img"><i class="fa-solid fa-box-open"></i></div>
-                    <div class="mc-title">List Your Item</div>
-                    <div class="mc-price">₱0.00</div>
-                    <div class="mc-footer">
-                        <span><i class="fa-solid fa-star text-warning"></i> New</span>
-                        <span class="mc-btn">Sell</span>
-                    </div>
-                </a>
+                if (displayProducts.Count >= i)
+                {
+                    var p = displayProducts[i - 1];
+                    var avgRating = p.Reviews != null && p.Reviews.Any() ? Math.Round(p.Reviews.Average(r => r.Rating), 1).ToString("0.0") : "New";
+
+                    <a href="@Url.Action("Details", "Products", new { id = p.Id })" class="mock-card glass-panel-light mock-card-@i">
+                        <div class="mc-img">
+                            @if (!string.IsNullOrEmpty(p.ImagePath))
+                            {
+                                <img src="@p.ImagePath" alt="@p.Name" />
+                            }
+                            else
+                            {
+                                <i class="fa-solid fa-image"></i>
+                            }
+                        </div>
+                        <div class="mc-title">@p.Name</div>
+                        <div class="mc-price">₱@p.Price.ToString("N2")</div>
+                        <div class="mc-footer">
+                            <span><i class="fa-solid fa-star text-warning"></i> @avgRating</span>
+                            <span class="mc-btn">Buy</span>
+                        </div>
+                    </a>
+                }
+                else
+                {
+                    <a asp-controller="Products" asp-action="Create" class="mock-card glass-panel-light mock-card-@i">
+                        <div class="mc-img"><i class="fa-solid fa-box-open"></i></div>
+                        <div class="mc-title">List Your Item</div>
+                        <div class="mc-price">₱0.00</div>
+                        <div class="mc-footer">
+                            <span><i class="fa-solid fa-star text-warning"></i> New</span>
+                            <span class="mc-btn">Sell</span>
+                        </div>
+                    </a>
+                }
             }
-        }
+        </div>
     </div>
 </section>
 
-<section class="features-section">
+<section class="features-section section-relative">
+    <div class="bg-dark-gif"></div>
+    
     <div class="features-inner">
         <div class="section-header">
             <span class="section-label">Why Lasamify?</span>
             <h2 class="section-title">Everything you need<br/>to trade locally</h2>
         </div>
         <div class="features-grid">
-            <div class="feature-item">
+            <div class="feature-item glass-panel-dark">
                 <div class="feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
                 <h3 class="feature-title">Secure Trading</h3>
                 <p class="feature-desc">Place orders with confidence. Track every purchase and sale from your personal dashboard with a complete transaction history.</p>
             </div>
-            <div class="feature-item">
+            <div class="feature-item glass-panel-dark">
                 <div class="feature-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
                 <h3 class="feature-title">Smart Search</h3>
                 <p class="feature-desc">Find exactly what you're looking for instantly. Powerful search capabilities and clean category filters across all listings.</p>
             </div>
-            <div class="feature-item">
+            <div class="feature-item glass-panel-dark">
                 <div class="feature-icon"><i class="fa-solid fa-store"></i></div>
                 <h3 class="feature-title">Seller Hub</h3>
                 <p class="feature-desc">Build your reputation. Upload a profile photo, receive reviews from buyers, and manage all your inventory in one place.</p>
@@ -298,11 +403,16 @@
     </div>
 </section>
 
-<section class="how-section">
+<section class="how-section section-relative">
+    <div class="bg-light-gif-container">
+        <div class="bg-light-gif-left"></div>
+        <div class="bg-light-gif-right"></div>
+    </div>
+
     <div class="how-inner">
-        <div>
-            <span class="section-label" style="color:var(--primary); font-weight:700; letter-spacing:1px; text-transform:uppercase; display:block; margin-bottom:1rem;">Simple Process</span>
-            <h2 class="section-title" style="font-size:clamp(2rem, 4vw, 3rem); font-family:'Outfit', sans-serif; font-weight:800; color:var(--black); line-height:1.2;">Up and running<br/>in minutes</h2>
+        <div class="how-text-panel glass-panel-light">
+            <span class="section-label">Simple Process</span>
+            <h2 class="section-title-light">Up and running<br/>in minutes</h2>
             
             <div class="steps">
                 <div class="step">
@@ -329,13 +439,13 @@
             </div>
         </div>
 
-        <div class="mockup-dashboard">
+        <div class="mockup-dashboard glass-panel-light">
             <div class="md-header">
                 <div class="md-user">
                     <div class="md-avatar"><i class="fa-solid fa-user"></i></div>
                     Seller Dashboard
                 </div>
-                <i class="fa-solid fa-bell text-muted"></i>
+                <i class="fa-solid fa-bell" style="color: var(--gray); font-size: 1.25rem;"></i>
             </div>
             <div class="md-stats">
                 <div class="md-stat-box">
@@ -347,47 +457,50 @@
                     <div class="md-stat-val">8</div>
                 </div>
             </div>
-            <div class="md-list">
-                <div class="md-item">
-                    <div class="md-item-info">
-                        <div class="md-item-icon"><i class="fa-solid fa-box text-warning"></i></div>
+            <div style="background: rgba(255,255,255,0.8); border: 1px solid rgba(0,0,0,0.05); border-radius: 12px; overflow: hidden;">
+                <div style="padding: 1.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; gap: 16px; align-items: center;">
+                        <div style="width: 48px; height: 48px; background: var(--white); border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05);"><i class="fa-solid fa-box text-warning" style="font-size: 1.25rem;"></i></div>
                         <div>
-                            <div style="font-weight:700; font-size:0.9rem; color:var(--black);">Order #1042</div>
-                            <div style="font-size:0.75rem; color:var(--gray);">Pending Fulfillment</div>
+                            <div style="font-weight:900; font-size:1.05rem; color:var(--black); font-family: 'Outfit', sans-serif;">Order #1042</div>
+                            <div style="font-size:0.85rem; color:var(--gray); font-weight: 700;">Pending Fulfillment</div>
                         </div>
                     </div>
-                    <div style="font-weight:700;">₱850</div>
+                    <div style="font-weight:900; color: var(--black); font-family: 'Outfit', sans-serif; font-size: 1.1rem;">₱850</div>
                 </div>
-                <div class="md-item">
-                    <div class="md-item-info">
-                        <div class="md-item-icon"><i class="fa-solid fa-check text-success"></i></div>
+                <div style="padding: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; gap: 16px; align-items: center;">
+                        <div style="width: 48px; height: 48px; background: var(--white); border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05);"><i class="fa-solid fa-check text-success" style="font-size: 1.25rem;"></i></div>
                         <div>
-                            <div style="font-weight:700; font-size:0.9rem; color:var(--black);">Order #1041</div>
-                            <div style="font-size:0.75rem; color:var(--gray);">Completed</div>
+                            <div style="font-weight:900; font-size:1.05rem; color:var(--black); font-family: 'Outfit', sans-serif;">Order #1041</div>
+                            <div style="font-size:0.85rem; color:var(--gray); font-weight: 700;">Completed</div>
                         </div>
                     </div>
-                    <div style="font-weight:700;">₱2,100</div>
+                    <div style="font-weight:900; color: var(--black); font-family: 'Outfit', sans-serif; font-size: 1.1rem;">₱2,100</div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<section class="cta-section">
-    <div class="cta-bg"></div>
-    <div class="cta-inner">
+<section class="cta-section section-relative">
+    <div class="bg-dark-gif"></div>
+    
+    <div class="cta-inner glass-panel-dark">
         <h2>Ready to join the<br/>community?</h2>
         <p>Sign up today and start buying or selling in your area. No hidden fees, completely free to set up your profile.</p>
         <div class="cta-buttons">
-            <a asp-controller="Account" asp-action="Register" class="btn-primary" style="background:var(--primary); color:var(--black);">Create Free Account</a>
-            <a asp-controller="Home" asp-action="Index" class="btn-ghost" style="background:transparent; color:var(--white); border-color:rgba(255,255,255,0.2);">Browse Marketplace</a>
+            <a asp-controller="Account" asp-action="Register" class="btn btn-primary">Create Free Account</a>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-light">
+                <span>Browse Marketplace</span>
+            </a>
         </div>
     </div>
 </section>
 
 <footer>
     <a class="footer-logo" asp-controller="Home" asp-action="Landing">
-        <span class="logo-dot"></span> Lasamify
+        <i class="fa-solid fa-cube"></i> Lasamify
     </a>
     <div class="footer-copy">© 2026 Lasamify. Your local marketplace.</div>
 </footer>

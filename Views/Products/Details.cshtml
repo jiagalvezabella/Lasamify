@@ -11,19 +11,51 @@
         --primary-hover: #FF9E00;
         --primary-light: #FFF4D6;
         --black: #0B0F19; 
-        --dark: #1C2434;
         --gray: #64748B;
-        --light-border: #E2E8F0;
-        --bg-light: #F8FAFC;
         --white: #FFFFFF;
         --success: #10B981;
         --error: #EF4444;
+        --glass-bg: rgba(255, 255, 255, 0.80);
+        --glass-border: rgba(255, 255, 255, 0.5);
+        --glass-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+        color: var(--black);
+        font-family: 'DM Sans', sans-serif;
+        min-height: 100vh;
+        margin: 0;
+        padding: 0;
+    }
+
+    .bg-light-gif-container {
+        position: fixed;
+        top: 0; left: 0; width: 100vw; height: 100vh;
+        z-index: -1;
+        display: flex;
+    }
+
+    .bg-light-gif-left {
+        width: 50%; height: 100%;
+        background: url('/images/light-bg3.gif') top left;
+        background-size: 100% auto;
+        background-repeat: repeat-y;
+    }
+
+    .bg-light-gif-right {
+        width: 50%; height: 100%;
+        background: url('/images/light-bg3.gif') top left;
+        background-size: 100% auto;
+        background-repeat: repeat-y;
+        transform: scaleX(-1);
     }
 
     .details-container {
         max-width: 1200px;
         margin: 0 auto;
         padding: 3rem 2rem;
+        position: relative;
+        z-index: 1;
     }
 
     .breadcrumb-nav {
@@ -38,12 +70,8 @@
     .breadcrumb-nav a {
         color: var(--primary);
         text-decoration: none;
-        font-weight: 500;
+        font-weight: 700;
         transition: color 0.2s;
-    }
-
-    .breadcrumb-nav a:hover {
-        color: var(--primary-hover);
     }
 
     .product-header {
@@ -68,7 +96,7 @@
     .product-image-placeholder {
         width: 100%;
         height: 400px;
-        background: var(--bg-light);
+        background: rgba(0,0,0,0.05);
         border-radius: 12px;
         display: flex;
         align-items: center;
@@ -78,14 +106,20 @@
     }
 
     .product-details {
-        display: flex;
-        flex-direction: column;
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        padding: 2.5rem;
+        box-shadow: var(--glass-shadow);
+        height: fit-content;
     }
 
     .product-category {
         display: inline-block;
         font-size: 0.75rem;
-        font-weight: 700;
+        font-weight: 800;
         text-transform: uppercase;
         color: var(--primary);
         margin-bottom: 1rem;
@@ -107,7 +141,7 @@
         gap: 1rem;
         margin-bottom: 1.5rem;
         padding-bottom: 1.5rem;
-        border-bottom: 1px solid var(--light-border);
+        border-bottom: 1px solid rgba(0,0,0,0.05);
     }
 
     .rating-stars {
@@ -118,6 +152,7 @@
     .rating-text {
         color: var(--gray);
         font-size: 0.9rem;
+        font-weight: 700;
     }
 
     .seller-info {
@@ -126,8 +161,9 @@
         gap: 1rem;
         margin-bottom: 2rem;
         padding: 1.25rem;
-        background: var(--bg-light);
-        border-radius: 8px;
+        background: rgba(0,0,0,0.02);
+        border-radius: 12px;
+        border: 1px solid rgba(0,0,0,0.05);
     }
 
     .seller-avatar {
@@ -139,29 +175,30 @@
         align-items: center;
         justify-content: center;
         color: var(--black);
-        font-weight: 700;
+        font-weight: 800;
     }
 
     .seller-details h4 {
         font-family: 'Outfit', sans-serif;
-        font-weight: 700;
+        font-weight: 800;
         color: var(--black);
-        margin: 0 0 0.25rem 0;
-        font-size: 0.95rem;
+        margin: 0 0 0.15rem 0;
+        font-size: 1rem;
     }
 
     .seller-details p {
         color: var(--gray);
         font-size: 0.85rem;
         margin: 0;
+        font-weight: 600;
     }
 
     .product-price {
         font-family: 'Outfit', sans-serif;
         font-size: 3rem;
         font-weight: 900;
-        color: var(--primary-hover);
-        margin-bottom: 0.5rem;
+        color: var(--black);
+        margin-bottom: 1.5rem;
         line-height: 1;
     }
 
@@ -170,6 +207,7 @@
         font-size: 1.05rem;
         line-height: 1.7;
         margin-bottom: 2rem;
+        font-weight: 600;
     }
 
     .stock-status {
@@ -177,17 +215,13 @@
         align-items: center;
         gap: 0.5rem;
         margin-bottom: 2rem;
-        font-weight: 600;
+        font-weight: 800;
         font-size: 0.95rem;
+        text-transform: uppercase;
     }
 
-    .stock-status.in-stock {
-        color: var(--success);
-    }
-
-    .stock-status.out-of-stock {
-        color: var(--error);
-    }
+    .stock-status.in-stock { color: var(--success); }
+    .stock-status.out-of-stock { color: var(--error); }
 
     .purchase-section {
         display: flex;
@@ -206,18 +240,19 @@
     }
 
     .quantity-selector label {
-        font-weight: 600;
+        font-weight: 800;
         color: var(--black);
         white-space: nowrap;
     }
 
     .quantity-selector input {
         width: 70px;
-        padding: 0.5rem;
-        border: 1px solid var(--light-border);
+        padding: 0.6rem;
+        border: 1px solid rgba(0,0,0,0.1);
         border-radius: 6px;
-        font-weight: 600;
+        font-weight: 800;
         text-align: center;
+        background: var(--white);
     }
 
     .btn-primary {
@@ -226,7 +261,7 @@
         padding: 1rem 2rem;
         border: none;
         border-radius: 8px;
-        font-weight: 700;
+        font-weight: 800;
         font-size: 1rem;
         cursor: pointer;
         transition: all 0.2s;
@@ -249,21 +284,22 @@
         color: var(--gray);
         font-size: 0.9rem;
         padding-top: 2rem;
-        border-top: 1px solid var(--light-border);
+        border-top: 1px solid rgba(0,0,0,0.05);
+        font-weight: 700;
     }
 
     .reviews-section {
         margin-top: 4rem;
         padding-top: 3rem;
-        border-top: 2px solid var(--light-border);
+        border-top: 1px solid rgba(0,0,0,0.05);
     }
 
     .reviews-header {
         font-family: 'Outfit', sans-serif;
-        font-size: 1.75rem;
+        font-size: 2rem;
         font-weight: 900;
         color: var(--black);
-        margin-bottom: 2rem;
+        margin-bottom: 2.5rem;
     }
 
     .reviews-container {
@@ -273,340 +309,275 @@
     }
 
     .review-form-card {
-        background: var(--white);
-        border: 1px solid var(--light-border);
-        border-radius: 12px;
-        padding: 2rem;
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        padding: 2.5rem;
         height: fit-content;
+        box-shadow: var(--glass-shadow);
     }
 
     .review-form-card h5 {
         font-family: 'Outfit', sans-serif;
-        font-weight: 700;
+        font-weight: 800;
         color: var(--black);
         margin-bottom: 1.5rem;
+        font-size: 1.2rem;
     }
 
-    .form-group {
-        margin-bottom: 1.5rem;
-    }
+    .form-group { margin-bottom: 1.5rem; }
 
     .form-label {
         display: block;
-        font-weight: 600;
+        font-weight: 700;
         color: var(--black);
         margin-bottom: 0.5rem;
         font-size: 0.9rem;
+        text-transform: uppercase;
     }
 
-    .form-control,
-    .form-select {
+    .form-control, .form-select {
         width: 100%;
         padding: 0.75rem;
-        border: 1px solid var(--light-border);
-        border-radius: 6px;
+        border: 1px solid rgba(0,0,0,0.1);
+        border-radius: 8px;
         font-family: 'DM Sans', sans-serif;
         font-size: 0.95rem;
-        transition: border-color 0.2s;
-    }
-
-    .form-control:focus,
-    .form-select:focus {
-        outline: none;
-        border-color: var(--primary);
-        box-shadow: 0 0 0 3px rgba(255, 183, 3, 0.1);
+        background: rgba(255,255,255,0.7);
     }
 
     .alert {
-        padding: 1rem;
-        border-radius: 8px;
+        padding: 1.25rem;
+        border-radius: 12px;
         margin-bottom: 1.5rem;
         display: flex;
         align-items: center;
         gap: 0.75rem;
         font-size: 0.95rem;
+        font-weight: 600;
     }
 
-    .alert-success {
-        background: rgba(16, 185, 129, 0.1);
-        color: var(--success);
-        border: 1px solid rgba(16, 185, 129, 0.2);
-    }
+    .alert-success { background: rgba(16, 185, 129, 0.15); color: #059669; }
+    .alert-info { background: rgba(59, 130, 246, 0.15); color: #1E40AF; }
 
-    .alert-info {
-        background: rgba(59, 130, 246, 0.1);
-        color: #1E40AF;
-        border: 1px solid rgba(59, 130, 246, 0.2);
-    }
-
-    .reviews-list {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-    }
+    .reviews-list { display: flex; flex-direction: column; gap: 1.5rem; }
 
     .review-card {
-        background: var(--white);
-        border: 1px solid var(--light-border);
-        border-radius: 12px;
-        padding: 1.5rem;
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .review-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(11, 15, 25, 0.08);
-    }
-
-    .review-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 1rem;
-    }
-
-    .reviewer-info {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: var(--glass-shadow);
     }
 
     .reviewer-avatar {
-        width: 40px;
-        height: 40px;
+        width: 44px; height: 44px;
         border-radius: 50%;
         background: var(--bg-light);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-weight: 700;
-        color: var(--gray);
-    }
-
-    .reviewer-name {
-        font-weight: 600;
+        font-weight: 800;
         color: var(--black);
+        border: 2px solid var(--white);
     }
 
-    .review-date {
-        color: var(--gray);
-        font-size: 0.85rem;
-    }
-
-    .review-rating {
-        color: var(--primary-hover);
-        margin-bottom: 0.75rem;
-        font-size: 0.95rem;
-    }
-
-    .review-comment {
-        color: var(--black);
-        line-height: 1.6;
-        font-size: 0.95rem;
-    }
-
-    .empty-reviews {
-        text-align: center;
-        padding: 3rem;
-        color: var(--gray);
-    }
-
-    .empty-reviews i {
-        font-size: 2.5rem;
-        margin-bottom: 1rem;
-        opacity: 0.5;
-    }
+    .reviewer-name { font-weight: 800; color: var(--black); font-size: 1.05rem; }
+    .review-date { color: var(--gray); font-size: 0.85rem; font-weight: 600; }
+    .review-rating { color: var(--primary-hover); margin-bottom: 0.75rem; font-size: 0.95rem; }
+    .review-comment { color: var(--black); line-height: 1.7; font-size: 1rem; font-weight: 500; }
 
     .btn-submit {
         width: 100%;
         background: var(--primary);
         color: var(--black);
-        padding: 0.875rem;
+        padding: 1rem;
         border: none;
         border-radius: 8px;
-        font-weight: 700;
+        font-weight: 800;
         cursor: pointer;
-        transition: all 0.2s;
-        box-shadow: 0 4px 14px rgba(255, 183, 3, 0.4);
+        box-shadow: 0 4px 12px rgba(255, 183, 3, 0.3);
     }
 
-    .btn-submit:hover {
-        background: var(--primary-hover);
-        transform: translateY(-2px);
-    }
-
-    @@media (max-width: 768px) {
+    @@media (max-width: 1024px) {
         .product-header { grid-template-columns: 1fr; gap: 2rem; }
         .product-image { position: static; }
-        .product-title { font-size: 1.75rem; }
         .reviews-container { grid-template-columns: 1fr; }
-        .purchase-section { flex-direction: column; }
-        .quantity-selector { flex-direction: column; width: 100%; align-items: stretch; }
-        .quantity-selector input { width: 100%; }
-        .btn-primary { flex-grow: 1; }
+        .bg-light-gif-container { flex-direction: column; }
+        .bg-light-gif-left, .bg-light-gif-right { width: 100%; height: 50%; }
     }
 </style>
+
+<div class="bg-light-gif-container">
+    <div class="bg-light-gif-left"></div>
+    <div class="bg-light-gif-right"></div>
+</div>
 
 <div class="details-container">
     <div class="breadcrumb-nav">
         <a asp-controller="Home" asp-action="Index">Marketplace</a>
         <span>/</span>
-        <span>@Model.Name</span>
+        <span style="font-weight: 800; color: var(--black);">@Model.Name</span>
     </div>
 
-<div class="product-header">
-    <div class="product-image">
-        @if (!string.IsNullOrEmpty(Model.ImagePath))
-        {
-            <img src="@Model.ImagePath" alt="@Model.Name" />
-        }
-        else
-        {
-            <div class="product-image-placeholder">
-                <i class="fa-solid fa-image"></i>
-            </div>
-        }
-    </div>
-
-    <div class="product-details">
-        <span class="product-category">@Model.Category</span>
-        <h1 class="product-title">@Model.Name</h1>
-
-        <div class="rating-section">
-            <div class="rating-stars">
-                @for (int i = 1; i <= 5; i++)
-                {
-                    <i class="@(i <= avgRating ? "fa-solid" : "fa-regular") fa-star"></i>
-                }
-            </div>
-            <span class="rating-text">
-                @if (reviewCount > 0)
-                {
-                    <span>@avgRating out of 5 • @reviewCount @(reviewCount == 1 ? "review" : "reviews")</span>
-                }
-                else
-                {
-                    <span>No reviews yet</span>
-                }
-            </span>
+    <div class="product-header">
+        <div class="product-image">
+            @if (!string.IsNullOrEmpty(Model.ImagePath))
+            {
+                <img src="@Model.ImagePath" alt="@Model.Name" />
+            }
+            else
+            {
+                <div class="product-image-placeholder"><i class="fa-solid fa-image"></i></div>
+            }
         </div>
 
-        @if (Model.Seller != null)
-        {
-            <div class="seller-info">
-                <div class="seller-avatar">@Model.Seller.Username.FirstOrDefault()</div>
-                <div class="seller-details">
-                    <h4>@Model.Seller.Username</h4>
-                    <p>Seller on Lasamify</p>
+        <div class="product-details">
+            <span class="product-category">@Model.Category</span>
+            <h1 class="product-title">@Model.Name</h1>
+
+            <div class="rating-section">
+                <div class="rating-stars">
+                    @for (int i = 1; i <= 5; i++)
+                    {
+                        <i class="@(i <= avgRating ? "fa-solid" : "fa-regular") fa-star"></i>
+                    }
                 </div>
+                <span class="rating-text">
+                    @if (reviewCount > 0)
+                    {
+                        <span>@avgRating out of 5 • @reviewCount @(reviewCount == 1 ? "review" : "reviews")</span>
+                    }
+                    else
+                    {
+                        <span>No reviews yet</span>
+                    }
+                </span>
             </div>
-        }
 
-        <div class="product-price">₱@Model.Price.ToString("N2")</div>
-
-        <p class="product-description">@Model.Description</p>
-
-        <div class="stock-status @(Model.Stock > 0 ? "in-stock" : "out-of-stock")">
-            <i class="fa-solid fa-@(Model.Stock > 0 ? "check-circle" : "times-circle")"></i>
-            @(Model.Stock > 0 ? $"{Model.Stock} items in stock" : "Out of stock")
-        </div>
-
-        @if (User.Identity?.IsAuthenticated == true && Model.IsAvailable && Model.Stock > 0)
-        {
-            <form method="post" asp-controller="Products" asp-action="Buy" asp-route-id="@Model.Id">
-                @Html.AntiForgeryToken()
-                <div class="purchase-section">
-                    <div class="quantity-selector">
-                        <label for="quantity">Quantity:</label>
-                        <input type="number" id="quantity" name="quantity" value="1" min="1" max="@Model.Stock" />
+            @if (Model.Seller != null)
+            {
+                <div class="seller-info">
+                    <div class="seller-avatar">@Model.Seller.Username.FirstOrDefault()</div>
+                    <div class="seller-details">
+                        <h4>@Model.Seller.Username</h4>
+                        <p>Seller on Lasamify</p>
                     </div>
-                    <button type="submit" class="btn-primary">
-                        <i class="fa-solid fa-cart-shopping"></i> Buy Now
-                    </button>
                 </div>
-            </form>
-        }
-        else if (User.Identity?.IsAuthenticated != true)
-        {
-            <a asp-controller="Account" asp-action="Login" class="btn-primary">
-                <i class="fa-solid fa-right-to-bracket"></i> Login to Buy
-            </a>
-        }
+            }
 
-        <div class="product-meta">
-            <i class="fa-solid fa-calendar"></i> Listed on @Model.CreatedAt.ToString("MMMM dd, yyyy")
+            <div class="product-price">₱@Model.Price.ToString("N2")</div>
+
+            <p class="product-description">@Model.Description</p>
+
+            <div class="stock-status @(Model.Stock > 0 ? "in-stock" : "out-of-stock")">
+                <i class="fa-solid fa-@(Model.Stock > 0 ? "check-circle" : "times-circle")"></i>
+                @(Model.Stock > 0 ? $"{Model.Stock} items in stock" : "Out of stock")
+            </div>
+
+            @if (User.Identity?.IsAuthenticated == true && Model.IsAvailable && Model.Stock > 0)
+            {
+                <form method="post" asp-controller="Products" asp-action="Buy" asp-route-id="@Model.Id">
+                    @Html.AntiForgeryToken()
+                    <div class="purchase-section">
+                        <div class="quantity-selector">
+                            <label for="quantity">Quantity:</label>
+                            <input type="number" id="quantity" name="quantity" value="1" min="1" max="@Model.Stock" />
+                        </div>
+                        <button type="submit" class="btn-primary">
+                            <i class="fa-solid fa-cart-shopping me-2"></i> Buy Now
+                        </button>
+                    </div>
+                </form>
+            }
+            else if (User.Identity?.IsAuthenticated != true)
+            {
+                <a asp-controller="Account" asp-action="Login" class="btn-primary">
+                    <i class="fa-solid fa-right-to-bracket me-2"></i> Login to Buy
+                </a>
+            }
+
+            <div class="product-meta">
+                <i class="fa-solid fa-calendar me-2"></i> Listed on @Model.CreatedAt.ToString("MMMM dd, yyyy")
+            </div>
         </div>
     </div>
-</div>
 
     <div class="reviews-section">
         <h2 class="reviews-header">Customer Reviews</h2>
 
         <div class="reviews-container">
-            @if (ViewBag.HasBought && !ViewBag.HasReviewed)
-            {
-                <div class="review-form-card">
-                    <h5><i class="fa-solid fa-pen-to-square me-2"></i>Share Your Review</h5>
-                    <form method="post" asp-controller="Products" asp-action="AddReview">
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" name="productId" value="@Model.Id" />
+            <div class="review-form-side">
+                @if (ViewBag.HasBought && !ViewBag.HasReviewed)
+                {
+                    <div class="review-form-card">
+                        <h5><i class="fa-solid fa-pen-to-square me-2"></i>Share Your Review</h5>
+                        <form method="post" asp-controller="Products" asp-action="AddReview">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="productId" value="@Model.Id" />
 
-                        <div class="form-group">
-                            <label class="form-label" for="rating">Your Rating</label>
-                            <select id="rating" name="rating" class="form-select">
-                                <option value="5">⭐ 5 Stars - Excellent</option>
-                                <option value="4">⭐ 4 Stars - Good</option>
-                                <option value="3">⭐ 3 Stars - Average</option>
-                                <option value="2">⭐ 2 Stars - Poor</option>
-                                <option value="1">⭐ 1 Star - Terrible</option>
-                            </select>
+                            <div class="form-group">
+                                <label class="form-label" for="rating">Your Rating</label>
+                                <select id="rating" name="rating" class="form-select">
+                                    <option value="5">⭐ 5 Stars - Excellent</option>
+                                    <option value="4">⭐ 4 Stars - Good</option>
+                                    <option value="3">⭐ 3 Stars - Average</option>
+                                    <option value="2">⭐ 2 Stars - Poor</option>
+                                    <option value="1">⭐ 1 Star - Terrible</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="comment">Your Comment</label>
+                                <textarea id="comment" name="comment" class="form-control" rows="5" required placeholder="What did you think about this product?"></textarea>
+                            </div>
+
+                            <button type="submit" class="btn-submit">
+                                <i class="fa-solid fa-paper-plane me-2"></i>Post Review
+                            </button>
+                        </form>
+                    </div>
+                }
+                else if (ViewBag.HasReviewed)
+                {
+                    <div class="review-form-card">
+                        <div class="alert alert-success">
+                            <i class="fa-solid fa-check-circle"></i>
+                            <span>You've already reviewed this product. Thank you!</span>
                         </div>
-
-                        <div class="form-group">
-                            <label class="form-label" for="comment">Your Comment</label>
-                            <textarea id="comment" name="comment" class="form-control" rows="5" required placeholder="What did you think about this product?"></textarea>
-                        </div>
-
-                        <button type="submit" class="btn-submit">
-                            <i class="fa-solid fa-paper-plane me-2"></i>Post Review
-                        </button>
-                    </form>
-                </div>
-            }
-            else if (ViewBag.HasReviewed)
-            {
-                <div class="review-form-card">
-                    <div class="alert alert-success">
-                        <i class="fa-solid fa-check-circle"></i>
-                        <span>You've already reviewed this product. Thank you!</span>
                     </div>
-                </div>
-            }
-            else if (User.Identity?.IsAuthenticated == true)
-            {
-                <div class="review-form-card">
-                    <div class="alert alert-info">
-                        <i class="fa-solid fa-info-circle"></i>
-                        <span>Purchase this item to leave a review</span>
+                }
+                else
+                {
+                    <div class="review-form-card">
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <div class="alert alert-info">
+                                <i class="fa-solid fa-info-circle"></i>
+                                <span>Purchase this item to leave a review</span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-info">
+                                <i class="fa-solid fa-lock"></i>
+                                <span><a asp-controller="Account" asp-action="Login" style="color: inherit; font-weight: 800; text-decoration: underline;">Sign in</a> to leave a review</span>
+                            </div>
+                        }
                     </div>
-                </div>
-            }
-            else
-            {
-                <div class="review-form-card">
-                    <div class="alert alert-info">
-                        <i class="fa-solid fa-lock"></i>
-                        <span><a asp-controller="Account" asp-action="Login" style="color: inherit; font-weight: 600; text-decoration: underline;">Sign in</a> to leave a review</span>
-                    </div>
-                </div>
-            }
+                }
+            </div>
 
             <div class="reviews-list">
                 @if (!Model.Reviews.Any())
                 {
-                    <div class="empty-reviews">
-                        <i class="fa-regular fa-comments"></i>
-                        <p>No reviews yet. Be the first to share your thoughts!</p>
+                    <div class="review-card" style="text-align: center; padding: 4rem;">
+                        <i class="fa-regular fa-comments fa-3x mb-3" style="opacity: 0.3;"></i>
+                        <p style="font-weight: 700; color: var(--gray);">No reviews yet. Be the first to share your thoughts!</p>
                     </div>
                 }
                 else
@@ -628,7 +599,7 @@
                                 {
                                     <i class="@(i <= review.Rating ? "fa-solid" : "fa-regular") fa-star"></i>
                                 }
-                                <span style="margin-left: 0.75rem; color: var(--black); font-weight: 600;">@review.Rating/5</span>
+                                <span style="margin-left: 0.75rem; color: var(--black); font-weight: 800;">@review.Rating/5</span>
                             </div>
                             <p class="review-comment">@review.Comment</p>
                         </div>

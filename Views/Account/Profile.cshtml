@@ -12,16 +12,49 @@
         --black: #0B0F19; 
         --dark: #1C2434;
         --gray: #64748B;
-        --light-border: #E2E8F0;
-        --bg-light: #F8FAFC;
         --white: #FFFFFF;
         --success: #10B981;
+        --glass-bg: rgba(255, 255, 255, 0.80);
+        --glass-border: rgba(255, 255, 255, 0.5);
+        --glass-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+        color: var(--black);
+        font-family: 'DM Sans', sans-serif;
+        min-height: 100vh;
+        margin: 0;
+        padding: 0;
+    }
+
+    .bg-light-gif-container {
+        position: fixed;
+        top: 0; left: 0; width: 100vw; height: 100vh;
+        z-index: -1;
+        display: flex;
+    }
+
+    .bg-light-gif-left {
+        width: 50%; height: 100%;
+        background: url('/images/light-bg3.gif') top left;
+        background-size: 100% auto;
+        background-repeat: repeat-y;
+    }
+
+    .bg-light-gif-right {
+        width: 50%; height: 100%;
+        background: url('/images/light-bg3.gif') top left;
+        background-size: 100% auto;
+        background-repeat: repeat-y;
+        transform: scaleX(-1);
     }
 
     .profile-container {
         max-width: 1200px;
         margin: 0 auto;
         padding: 3rem 2rem;
+        position: relative;
+        z-index: 1;
     }
 
     .profile-header {
@@ -32,12 +65,14 @@
     }
 
     .profile-card {
-        background: var(--white);
-        border: 1px solid var(--light-border);
-        border-radius: 12px;
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
         padding: 2rem;
         text-align: center;
-        box-shadow: 0 20px 40px rgba(11, 15, 25, 0.08);
+        box-shadow: var(--glass-shadow);
         height: fit-content;
     }
 
@@ -65,7 +100,7 @@
 
     .profile-name {
         font-family: 'Outfit', sans-serif;
-        font-size: 1.5rem;
+        font-size: 1.75rem;
         font-weight: 900;
         color: var(--black);
         margin-bottom: 0.5rem;
@@ -73,28 +108,32 @@
 
     .profile-email {
         color: var(--gray);
-        font-size: 0.9rem;
+        font-size: 0.95rem;
         margin-bottom: 1rem;
+        font-weight: 600;
     }
 
     .profile-role {
         display: inline-block;
         background: var(--primary);
         color: var(--black);
-        padding: 0.5rem 1rem;
+        padding: 0.5rem 1.25rem;
         border-radius: 50px;
-        font-weight: 600;
+        font-weight: 800;
         font-size: 0.85rem;
         margin-bottom: 1.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
     .member-since {
         color: var(--gray);
         font-size: 0.85rem;
         padding: 1rem 0;
-        border-top: 1px solid var(--light-border);
-        border-bottom: 1px solid var(--light-border);
+        border-top: 1px solid rgba(0,0,0,0.05);
+        border-bottom: 1px solid rgba(0,0,0,0.05);
         margin-bottom: 1.5rem;
+        font-weight: 700;
     }
 
     .photo-upload {
@@ -105,40 +144,20 @@
 
     .photo-upload input[type="file"] {
         padding: 0.5rem;
-        border: 1px solid var(--light-border);
-        border-radius: 6px;
+        border: 1px solid rgba(0,0,0,0.1);
+        border-radius: 8px;
         font-size: 0.9rem;
         cursor: pointer;
-        transition: border-color 0.2s;
-    }
-
-    .photo-upload input[type="file"]:hover {
-        border-color: var(--primary);
-    }
-
-    .photo-upload input[type="file"]::file-selector-button {
-        background: var(--primary);
-        color: var(--black);
-        padding: 0.5rem 1rem;
-        border: none;
-        border-radius: 6px;
-        font-weight: 600;
-        cursor: pointer;
-        margin-right: 0.75rem;
-        transition: background 0.2s;
-    }
-
-    .photo-upload input[type="file"]::file-selector-button:hover {
-        background: var(--primary-hover);
+        background: rgba(255,255,255,0.5);
     }
 
     .btn-secondary {
         background: var(--white);
-        color: var(--primary);
-        border: 1px solid var(--primary);
+        color: var(--black);
+        border: 2px solid var(--black);
         padding: 0.75rem 1.5rem;
         border-radius: 8px;
-        font-weight: 600;
+        font-weight: 800;
         cursor: pointer;
         transition: all 0.2s;
         width: 100%;
@@ -150,23 +169,25 @@
     }
 
     .btn-secondary:hover {
-        background: var(--primary);
-        color: var(--black);
+        background: var(--black);
+        color: var(--white);
     }
 
     .content-section {
-        background: var(--white);
-        border: 1px solid var(--light-border);
-        border-radius: 12px;
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
         overflow: hidden;
-        box-shadow: 0 20px 40px rgba(11, 15, 25, 0.08);
+        box-shadow: var(--glass-shadow);
         margin-bottom: 2rem;
     }
 
     .section-header {
-        background: var(--bg-light);
-        padding: 1.5rem;
-        border-bottom: 1px solid var(--light-border);
+        background: rgba(0,0,0,0.02);
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -174,8 +195,8 @@
 
     .section-title {
         font-family: 'Outfit', sans-serif;
-        font-size: 1.25rem;
-        font-weight: 800;
+        font-size: 1.5rem;
+        font-weight: 900;
         color: var(--black);
         margin: 0;
         display: flex;
@@ -189,18 +210,20 @@
         padding: 0.75rem 1.5rem;
         border: none;
         border-radius: 8px;
-        font-weight: 600;
+        font-weight: 800;
         cursor: pointer;
         transition: all 0.2s;
         text-decoration: none;
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
+        box-shadow: 0 4px 12px rgba(255, 183, 3, 0.3);
     }
 
     .btn-primary:hover {
         background: var(--primary-hover);
         transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(255, 183, 3, 0.4);
     }
 
     .section-content {
@@ -213,80 +236,92 @@
     }
 
     .data-table thead {
-        background: var(--bg-light);
+        background: rgba(0,0,0,0.03);
     }
 
     .data-table th {
-        padding: 1rem;
+        padding: 1.25rem 1rem;
         text-align: left;
-        font-weight: 700;
+        font-weight: 800;
         color: var(--black);
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 1px;
     }
 
     .data-table td {
-        padding: 1rem;
-        border-top: 1px solid var(--light-border);
+        padding: 1.25rem 1rem;
+        border-top: 1px solid rgba(0,0,0,0.05);
         color: var(--black);
         font-size: 0.95rem;
+        font-weight: 600;
     }
 
     .data-table tr:hover {
-        background: var(--bg-light);
+        background: rgba(0,0,0,0.01);
     }
 
     .badge {
         display: inline-block;
-        padding: 0.5rem 0.75rem;
+        padding: 0.4rem 0.8rem;
         border-radius: 6px;
-        font-size: 0.8rem;
-        font-weight: 600;
+        font-size: 0.75rem;
+        font-weight: 800;
+        text-transform: uppercase;
     }
 
     .badge-success {
-        background: rgba(16, 185, 129, 0.1);
-        color: var(--success);
+        background: rgba(16, 185, 129, 0.15);
+        color: #059669;
     }
 
     .badge-warning {
-        background: rgba(255, 183, 3, 0.1);
+        background: rgba(255, 183, 3, 0.15);
         color: var(--primary-hover);
     }
 
     .empty-state {
         text-align: center;
-        padding: 3rem;
+        padding: 4rem 2rem;
         color: var(--gray);
     }
 
     .empty-state i {
-        font-size: 2.5rem;
-        margin-bottom: 1rem;
-        opacity: 0.5;
+        font-size: 3.5rem;
+        margin-bottom: 1.5rem;
+        opacity: 0.3;
     }
 
     .delete-btn {
-        background: #EF4444;
-        color: var(--white);
-        border: none;
+        background: rgba(239, 68, 68, 0.1);
+        color: #DC2626;
+        border: 2px solid #DC2626;
         padding: 0.5rem 1rem;
         border-radius: 6px;
         cursor: pointer;
         font-size: 0.85rem;
+        font-weight: 800;
         transition: all 0.2s;
     }
 
     .delete-btn:hover {
         background: #DC2626;
+        color: var(--white);
     }
 
-    @@media (max-width: 768px) {
-        .profile-container { padding: 1.5rem; }
+    @@media (max-width: 1024px) {
         .profile-header { grid-template-columns: 1fr; gap: 2rem; }
+        .profile-card { width: 100%; max-width: 400px; margin: 0 auto; }
+        .bg-light-gif-container { flex-direction: column; }
+        .bg-light-gif-left, .bg-light-gif-right { width: 100%; height: 50%; }
+        .data-table { display: block; overflow-x: auto; }
     }
 </style>
+
+<div class="bg-light-gif-container">
+    <div class="bg-light-gif-left"></div>
+    <div class="bg-light-gif-right"></div>
+</div>
 
 <div class="profile-container">
     <div class="profile-header">
@@ -306,27 +341,27 @@
             <div class="profile-role">
                 @if (Model?.Role == "Seller")
                 {
-                    <i class="fa-solid fa-store me-1"></i>
+                    <i class="fa-solid fa-store me-2"></i>
                 }
                 else
                 {
-                    <i class="fa-solid fa-shopping-cart me-1"></i>
+                    <i class="fa-solid fa-shopping-cart me-2"></i>
                 }
                 @Model?.Role
             </div>
             <div class="member-since">
-                <i class="fa-solid fa-calendar me-1"></i> Member since @Model?.CreatedAt.ToString("MMMM yyyy")
+                <i class="fa-solid fa-calendar-check me-2"></i> Member since @Model?.CreatedAt.ToString("MMMM yyyy")
             </div>
             <form method="post" enctype="multipart/form-data"
                   asp-controller="Account" asp-action="UploadProfilePicture" class="photo-upload">
                 @Html.AntiForgeryToken()
-                <label style="font-weight: 600; color: var(--black); font-size: 0.9rem; margin-bottom: 0.5rem;">
-                    <i class="fa-solid fa-image me-1" style="color: var(--primary);"></i>Profile Picture
+                <label style="font-weight: 800; color: var(--black); font-size: 0.85rem; margin-bottom: 0.25rem; text-align: left; text-transform: uppercase; letter-spacing: 0.5px;">
+                    Update Photo
                 </label>
                 <input type="file" name="profilePicture" accept="image/*" />
-                <span style="font-size: 0.8rem; color: var(--gray); margin-top: -0.5rem;">JPG, PNG, or GIF (Max 5MB)</span>
+                <span style="font-size: 0.75rem; color: var(--gray); margin-bottom: 0.5rem; font-weight: 600;">JPG, PNG, or GIF (Max 5MB)</span>
                 <button type="submit" class="btn-secondary">
-                    <i class="fa-solid fa-camera"></i> Update Photo
+                    <i class="fa-solid fa-camera me-2"></i> Save Photo
                 </button>
             </form>
         </div>
@@ -337,10 +372,11 @@
                 <div class="content-section">
                     <div class="section-header">
                         <h3 class="section-title">
-                            <i class="fa-solid fa-tag"></i>My Listings <span style="color: var(--gray); font-size: 0.8rem;">(@Model?.Products.Count)</span>
+                            <i class="fa-solid fa-tag" style="color: var(--primary);"></i> My Listings 
+                            <span style="color: var(--gray); font-size: 0.9rem; font-weight: 700;">(@Model?.Products.Count)</span>
                         </h3>
                         <a asp-controller="Products" asp-action="Create" class="btn-primary">
-                            <i class="fa-solid fa-plus"></i> Add Product
+                            <i class="fa-solid fa-plus"></i> Add New Product
                         </a>
                     </div>
                     <div class="section-content">
@@ -360,8 +396,8 @@
                                     @foreach (var p in Model.Products)
                                     {
                                         <tr>
-                                            <td>@p.Name</td>
-                                            <td>₱@p.Price.ToString("N2")</td>
+                                            <td style="font-weight: 800;">@p.Name</td>
+                                            <td style="color: var(--primary-hover); font-weight: 800;">₱@p.Price.ToString("N2")</td>
                                             <td>@p.Stock units</td>
                                             <td>
                                                 <span class="badge @(p.IsAvailable ? "badge-success" : "badge-warning")">
@@ -373,7 +409,7 @@
                                                       style="display: inline;" onsubmit="return confirm('Remove this product?');">
                                                     @Html.AntiForgeryToken()
                                                     <button type="submit" class="delete-btn">
-                                                        <i class="fa-solid fa-trash"></i> Delete
+                                                        <i class="fa-solid fa-trash me-1"></i> Delete
                                                     </button>
                                                 </form>
                                             </td>
@@ -386,9 +422,10 @@
                         {
                             <div class="empty-state">
                                 <i class="fa-solid fa-box-open"></i>
-                                <p>No products listed yet.</p>
-                                <a asp-controller="Products" asp-action="Create" class="btn-primary" style="margin-top: 1rem;">
-                                    <i class="fa-solid fa-plus"></i> Create Your First Listing
+                                <h4 style="font-weight: 800; color: var(--black); margin-bottom: 0.5rem;">No listings yet</h4>
+                                <p style="font-weight: 600;">Ready to sell? Create your first product listing today.</p>
+                                <a asp-controller="Products" asp-action="Create" class="btn-primary" style="margin-top: 1.5rem;">
+                                    <i class="fa-solid fa-plus"></i> Create Listing
                                 </a>
                             </div>
                         }
@@ -401,7 +438,8 @@
                 <div class="content-section">
                     <div class="section-header">
                         <h3 class="section-title">
-                            <i class="fa-solid fa-receipt"></i> My Purchases <span style="color: var(--gray); font-size: 0.8rem;">(@Model?.BuyerTransactions.Count)</span>
+                            <i class="fa-solid fa-receipt" style="color: var(--primary);"></i> My Purchases 
+                            <span style="color: var(--gray); font-size: 0.9rem; font-weight: 700;">(@Model?.BuyerTransactions.Count)</span>
                         </h3>
                     </div>
                     <div class="section-content">
@@ -412,7 +450,7 @@
                                     <tr>
                                         <th>Product</th>
                                         <th>Quantity</th>
-                                        <th>Total Amount</th>
+                                        <th>Total</th>
                                         <th>Status</th>
                                         <th>Date</th>
                                         <th>Receipt</th>
@@ -422,23 +460,23 @@
                                     @foreach (var t in Model.BuyerTransactions.OrderByDescending(x => x.TransactionDate))
                                     {
                                         <tr>
-                                            <td>@t.Product?.Name</td>
+                                            <td style="font-weight: 800;">@t.Product?.Name</td>
                                             <td>@t.Quantity x</td>
-                                            <td><strong>₱@t.TotalAmount.ToString("N2")</strong></td>
+                                            <td><strong style="color: var(--black); font-weight: 900;">₱@t.TotalAmount.ToString("N2")</strong></td>
                                             <td>
                                                 <span class="badge @(t.Status == "Completed" ? "badge-success" : "badge-warning")">
                                                     @t.Status
                                                 </span>
                                             </td>
-                                            <td>@t.TransactionDate.ToString("MMM dd, yyyy")</td>
+                                            <td style="font-size: 0.85rem; color: var(--gray);">@t.TransactionDate.ToString("MMM dd, yyyy")</td>
                                             <td>
                                                 <form method="post" enctype="multipart/form-data" 
                                                       asp-controller="Account" asp-action="UploadTransactionReceipt"
-                                                      asp-route-transactionId="@t.Id" style="display: inline;">
+                                                      asp-route-transactionId="@t.Id" style="display: flex; gap: 0.5rem; align-items: center;">
                                                     @Html.AntiForgeryToken()
-                                                    <input type="file" name="receipt" accept="image/*" style="padding: 0.25rem; font-size: 0.8rem;" />
-                                                    <button type="submit" class="btn-secondary" style="padding: 0.5rem 1rem; width: auto; font-size: 0.85rem;">
-                                                        <i class="fa-solid fa-cloud-arrow-up"></i> Upload
+                                                    <input type="file" name="receipt" accept="image/*" style="padding: 0.25rem; font-size: 0.75rem; width: 140px;" />
+                                                    <button type="submit" class="btn-secondary" style="padding: 0.4rem 0.8rem; width: auto; font-size: 0.75rem;">
+                                                        <i class="fa-solid fa-upload"></i>
                                                     </button>
                                                 </form>
                                             </td>
@@ -451,8 +489,9 @@
                         {
                             <div class="empty-state">
                                 <i class="fa-solid fa-shopping-bag"></i>
-                                <p>No purchases yet.</p>
-                                <a asp-controller="Home" asp-action="Index" class="btn-primary" style="margin-top: 1rem;">
+                                <h4 style="font-weight: 800; color: var(--black); margin-bottom: 0.5rem;">No purchases yet</h4>
+                                <p style="font-weight: 600;">Explore our community marketplace and find great deals!</p>
+                                <a asp-controller="Home" asp-action="Index" class="btn-primary" style="margin-top: 1.5rem;">
                                     <i class="fa-solid fa-store"></i> Start Shopping
                                 </a>
                             </div>

@@ -6,21 +6,53 @@
 
 <style>
     :root {
-        --primary: #FFB703; 
+        --primary: #FFB703;
         --primary-hover: #FF9E00;
-        --primary-light: #FFF4D6;
-        --black: #0B0F19; 
-        --dark: #1C2434;
+        --black: #0B0F19;
         --gray: #64748B;
-        --light-border: #E2E8F0;
-        --bg-light: #F8FAFC;
         --white: #FFFFFF;
+        --glass-bg: rgba(255, 255, 255, 0.80);
+        --glass-border: rgba(255, 255, 255, 0.5);
+        --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+        color: var(--black);
+        font-family: 'DM Sans', sans-serif;
+        min-height: 100vh;
+        margin: 0;
+        padding: 0;
+        position: relative;
+    }
+
+    .gif-bg-light {
+        position: fixed;
+        top: 0; left: 0; width: 50vw; height: 100vh;
+        background: url('/images/light-bg3.gif') top left;
+        background-size: 100% auto;
+        background-repeat: repeat-y;
+        z-index: -1;
+    }
+
+    .gif-bg-light::after {
+        content: '';
+        position: fixed;
+        top: 0; left: 50vw; width: 50vw; height: 100vh;
+        background: url('/images/light-bg3.gif') top left;
+        background-size: 100% auto;
+        background-repeat: repeat-y;
+        transform: scaleX(-1);
+        z-index: -1;
     }
 
     .container-marketplace {
         max-width: 1200px;
         margin: 0 auto;
         width: 100%;
+        position: relative;
+        z-index: 1;
+        padding-top: 2rem;
+        padding-bottom: 4rem;
     }
 
     .marketplace-header {
@@ -29,40 +61,56 @@
         align-items: center;
         margin-bottom: 2.5rem;
         gap: 2rem;
+        background: var(--glass-bg);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        padding: 1.5rem 2rem;
+        border-radius: 12px;
+        border: 1px solid var(--glass-border);
+        box-shadow: var(--glass-shadow);
     }
 
     .marketplace-header h1 {
         font-family: 'Outfit', sans-serif;
         font-size: 2.25rem;
         font-weight: 900;
-        color: var(--black) !important;
-        margin: 0 !important;
+        color: var(--black);
+        margin: 0;
     }
 
     .btn-list-product {
-        background: var(--primary) !important;
-        color: var(--black) !important;
-        padding: 0.75rem 1.75rem !important;
-        border-radius: 8px !important;
-        font-weight: 700 !important;
-        text-decoration: none !important;
+        background: var(--primary);
+        color: var(--black);
+        padding: 0.75rem 1.75rem;
+        border-radius: 8px;
+        font-weight: 800;
+        text-decoration: none;
         transition: all 0.2s;
         box-shadow: 0 4px 14px rgba(255, 183, 3, 0.4);
         white-space: nowrap;
-        border: none !important;
+        border: none;
+        display: inline-flex;
+        align-items: center;
     }
 
     .btn-list-product:hover {
-        background: var(--primary-hover) !important;
+        background: var(--primary-hover);
         transform: translateY(-2px);
         box-shadow: 0 6px 20px rgba(255, 183, 3, 0.5);
-        color: var(--black) !important;
+        color: var(--black);
     }
 
     .search-bar {
         display: flex;
         gap: 1rem;
         margin-bottom: 2.5rem;
+        background: var(--glass-bg);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid var(--glass-border);
+        border-radius: 12px;
+        padding: 1.5rem 2rem;
+        box-shadow: var(--glass-shadow);
     }
 
     .search-input-wrapper {
@@ -71,23 +119,26 @@
     }
 
     .search-input {
-        width: 100% !important;
-        padding: 1rem 1.5rem !important;
-        border: 1px solid var(--light-border) !important;
-        border-radius: 8px !important;
-        font-family: 'DM Sans', sans-serif !important;
-        font-size: 1rem !important;
+        width: 100%;
+        padding: 1rem 1.5rem;
+        border: 1px solid rgba(0,0,0,0.1);
+        border-radius: 8px 0 0 8px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 1rem;
         transition: border-color 0.2s, box-shadow 0.2s;
-        background: var(--white) !important;
-        color: var(--black) !important;
+        background: rgba(255, 255, 255, 0.8);
+        color: var(--black);
     }
 
     .search-input:focus {
-        outline: none !important;
-        border-color: var(--primary) !important;
-        box-shadow: 0 0 0 3px rgba(255, 183, 3, 0.1) !important;
-        background: var(--white) !important;
-        color: var(--black) !important;
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(255, 183, 3, 0.2);
+        background: var(--white);
+    }
+
+    .search-input::placeholder {
+        color: var(--gray);
     }
 
     .search-bar form {
@@ -97,15 +148,15 @@
     }
 
     .btn-search {
-        background: var(--primary) !important;
-        color: var(--black) !important;
-        border: none !important;
-        padding: 0.5rem 1.5rem !important;
-        border-radius: 0 8px 8px 0 !important;
-        font-weight: 700 !important;
+        background: var(--primary);
+        color: var(--black);
+        border: none;
+        padding: 0.5rem 2rem;
+        border-radius: 0 8px 8px 0;
+        font-weight: 800;
         cursor: pointer;
         transition: all 0.2s;
-        box-shadow: 0 4px 14px rgba(255, 183, 3, 0.4);
+        box-shadow: 0 4px 14px rgba(255, 183, 3, 0.2);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -113,9 +164,7 @@
     }
 
     .btn-search:hover {
-        background: var(--primary-hover) !important;
-        transform: translateY(-2px);
-        color: var(--black) !important;
+        background: var(--primary-hover);
     }
 
     .category-filters {
@@ -127,25 +176,27 @@
     }
 
     .category-pill {
-        background: var(--white) !important;
-        color: var(--gray) !important;
-        border: 1px solid var(--light-border) !important;
-        padding: 0.5rem 1.25rem !important;
-        border-radius: 50px !important;
-        font-size: 0.9rem;
-        font-weight: 500;
-        text-decoration: none !important;
+        background: var(--glass-bg);
+        color: var(--black);
+        border: 1px solid var(--glass-border);
+        padding: 0.6rem 1.5rem;
+        border-radius: 50px;
+        font-size: 0.95rem;
+        font-weight: 700;
+        text-decoration: none;
         transition: all 0.2s;
         white-space: nowrap;
         cursor: pointer;
-        display: inline-block;
+        backdrop-filter: blur(8px);
+        box-shadow: var(--glass-shadow);
     }
 
     .category-pill:hover,
     .category-pill.active {
-        background: var(--primary) !important;
-        color: var(--black) !important;
-        border-color: var(--primary) !important;
+        background: var(--primary);
+        color: var(--black);
+        border-color: var(--primary);
+        box-shadow: 0 4px 15px rgba(255, 183, 3, 0.4);
     }
 
     .results-info {
@@ -153,56 +204,58 @@
         justify-content: space-between;
         align-items: center;
         margin-bottom: 2rem;
-        padding-bottom: 1.5rem;
-        border-bottom: 1px solid var(--light-border);
+        padding: 1.5rem 2rem;
+        background: var(--glass-bg);
+        backdrop-filter: blur(16px);
+        border-radius: 12px;
+        border: 1px solid var(--glass-border);
+        box-shadow: var(--glass-shadow);
     }
 
     .results-title {
         font-family: 'Outfit', sans-serif;
         font-size: 1.5rem;
         font-weight: 800;
-        color: var(--black) !important;
-        margin: 0 !important;
+        color: var(--black);
+        margin: 0;
     }
 
     .results-count {
         color: var(--gray);
-        font-size: 0.9rem;
+        font-size: 0.95rem;
+        font-weight: 700;
     }
 
     .products-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: 2.5rem;
-        margin-bottom: 3rem;
+        margin-bottom: 4rem;
         padding: 0;
         perspective: 1200px;
     }
 
     .product-card {
-        background: var(--white) !important;
-        border-radius: 12px !important;
-        border: 1px solid var(--light-border) !important;
+        background: transparent;
+        border-radius: 12px;
+        border: none;
         overflow: visible;
-        transition: transform 0.6s ease-in-out;
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         display: flex;
         flex-direction: column;
         height: 100%;
-        box-shadow: 0 2px 8px rgba(11, 15, 25, 0.08) !important;
         position: relative;
         z-index: 1;
         transform-style: preserve-3d;
         cursor: pointer;
+        min-height: 420px;
     }
 
     .product-card:hover {
         transform: rotateY(180deg);
         z-index: 10;
-        box-shadow: 0 12px 32px rgba(11, 15, 25, 0.16) !important;
-        border-color: var(--primary) !important;
     }
 
-    /* Front side */
     .product-card-front {
         backface-visibility: hidden;
         display: flex;
@@ -210,37 +263,41 @@
         height: 100%;
         overflow: hidden;
         border-radius: 12px;
+        background: var(--glass-bg);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid var(--glass-border);
+        box-shadow: var(--glass-shadow);
     }
 
-    /* Back side */
     .product-card-back {
         backface-visibility: hidden;
         transform: rotateY(180deg);
         display: flex;
         flex-direction: column;
         height: 100%;
-        padding: 1.5rem;
+        padding: 2rem;
         justify-content: center;
         text-align: center;
-        background: linear-gradient(135deg, var(--primary-light) 0%, rgba(255, 183, 3, 0.05) 100%);
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border: 2px solid var(--primary);
+        box-shadow: 0 20px 40px rgba(255, 183, 3, 0.2);
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
+        top: 0; left: 0; right: 0; bottom: 0;
         border-radius: 12px;
     }
 
     .product-card-back h3 {
         font-family: 'Outfit', sans-serif;
-        font-size: 1.1rem;
+        font-size: 1.25rem;
         font-weight: 800;
         color: var(--black);
         margin: 0 0 1rem 0;
     }
 
     .product-card-back p {
-        font-size: 0.85rem;
+        font-size: 0.9rem;
         color: var(--gray);
         line-height: 1.6;
         margin: 0 0 1.5rem 0;
@@ -249,20 +306,20 @@
 
     .product-card-back-actions {
         display: flex;
-        gap: 0.75rem;
+        gap: 1rem;
         flex-direction: column;
     }
 
     .product-card-back-btn {
-        background: var(--primary) !important;
-        color: var(--black) !important;
-        border: none !important;
-        padding: 0.7rem 1rem !important;
-        border-radius: 6px !important;
-        font-weight: 700 !important;
-        text-decoration: none !important;
+        background: var(--primary);
+        color: var(--black);
+        border: none;
+        padding: 0.75rem 1rem;
+        border-radius: 6px;
+        font-weight: 800;
+        text-decoration: none;
         transition: all 0.2s;
-        font-size: 0.85rem;
+        font-size: 0.9rem;
         cursor: pointer;
         display: inline-flex;
         align-items: center;
@@ -271,29 +328,32 @@
     }
 
     .product-card-back-btn:hover {
-        background: var(--primary-hover) !important;
+        background: var(--primary-hover);
         transform: translateY(-2px);
     }
 
     .product-card-back-btn.secondary {
-        background: var(--dark) !important;
-        color: var(--white) !important;
+        background: transparent;
+        color: var(--black);
+        border: 2px solid var(--black);
     }
 
     .product-card-back-btn.secondary:hover {
-        background: var(--black) !important;
+        background: var(--black);
+        color: var(--white);
     }
 
     .product-image-wrapper {
         width: 100%;
-        height: 220px;
+        height: 200px;
         overflow: hidden;
-        background: linear-gradient(135deg, var(--bg-light) 0%, #f0f0f0 100%);
+        background: rgba(0, 0, 0, 0.05);
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
         position: relative;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
     }
 
     .product-image-wrapper a {
@@ -309,22 +369,23 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.3s ease-in-out;
+        transition: transform 0.4s ease-in-out;
         display: block;
     }
 
-    .product-card:hover .product-img {
+    .product-card-front:hover .product-img {
         transform: scale(1.08);
     }
 
     .product-img-placeholder {
         color: var(--gray);
-        font-size: 3rem;
+        font-size: 3.5rem;
         display: flex;
         align-items: center;
         justify-content: center;
         width: 100%;
         height: 100%;
+        opacity: 0.5;
     }
 
     .product-info {
@@ -336,35 +397,35 @@
     }
 
     .product-category {
-        font-size: 0.7rem;
+        font-size: 0.75rem;
         font-weight: 800;
         text-transform: uppercase;
-        color: var(--primary);
-        margin: 0 !important;
+        color: var(--primary-hover);
+        margin: 0;
         letter-spacing: 0.7px;
     }
 
     .product-name {
         font-family: 'Outfit', sans-serif;
-        font-size: 1.05rem;
-        font-weight: 700;
-        color: var(--black) !important;
-        margin: 0 !important;
-        text-decoration: none !important;
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: var(--black);
+        margin: 0;
+        text-decoration: none;
         display: block;
         transition: color 0.2s;
-        line-height: 1.4;
+        line-height: 1.3;
     }
 
-    .product-card:hover .product-name {
-        color: var(--primary) !important;
+    .product-card-front:hover .product-name {
+        color: var(--primary-hover);
     }
 
     .product-desc {
         font-size: 0.85rem;
         color: var(--gray);
-        line-height: 1.5;
-        margin: 0 !important;
+        line-height: 1.6;
+        margin: 0;
         flex-grow: 1;
     }
 
@@ -375,32 +436,33 @@
         gap: 1rem;
         padding-top: 1rem;
         margin-top: auto;
-        border-top: 1px solid var(--light-border);
+        border-top: 1px solid rgba(0,0,0,0.05);
     }
 
     .product-price {
         font-family: 'Outfit', sans-serif;
-        font-size: 1.35rem;
+        font-size: 1.4rem;
         font-weight: 900;
-        color: var(--primary-hover);
+        color: var(--black);
         line-height: 1;
     }
 
     .product-meta {
         font-size: 0.8rem;
         color: var(--gray);
-        margin-top: 0.25rem;
+        margin-top: 0.35rem;
+        font-weight: 700;
     }
 
     .view-product-btn {
-        background: transparent !important;
-        border: 1.5px solid var(--primary) !important;
-        color: var(--primary) !important;
-        padding: 0.55rem 1.1rem !important;
-        border-radius: 6px !important;
+        background: transparent;
+        border: 1px solid var(--black);
+        color: var(--black);
+        padding: 0.55rem 1.1rem;
+        border-radius: 6px;
         font-size: 0.85rem;
-        font-weight: 600;
-        text-decoration: none !important;
+        font-weight: 700;
+        text-decoration: none;
         transition: all 0.2s;
         text-align: center;
         white-space: nowrap;
@@ -410,75 +472,82 @@
     }
 
     .view-product-btn:hover {
-        background: var(--primary) !important;
-        color: var(--black) !important;
+        background: var(--black);
+        color: var(--white);
         transform: translateX(2px);
     }
 
     .empty-state {
         text-align: center;
         padding: 5rem 2rem;
-        background: var(--bg-light);
+        background: var(--glass-bg);
+        backdrop-filter: blur(16px);
         border-radius: 12px;
-        border: 1px solid var(--light-border);
+        border: 1px solid var(--glass-border);
+        box-shadow: var(--glass-shadow);
+        margin-bottom: 4rem;
     }
 
     .empty-state i {
-        font-size: 3.5rem;
+        font-size: 4rem;
         color: var(--gray);
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
         opacity: 0.5;
     }
 
     .empty-state h2 {
         font-family: 'Outfit', sans-serif;
-        font-size: 1.5rem;
+        font-size: 1.75rem;
+        font-weight: 800;
         color: var(--black);
         margin-bottom: 0.5rem;
     }
 
     .empty-state p {
         color: var(--gray);
-        margin-bottom: 1.5rem;
+        margin-bottom: 2rem;
+        font-size: 1.05rem;
     }
 
     .empty-state a {
-        background: var(--primary) !important;
-        color: var(--black) !important;
-        padding: 0.75rem 1.5rem;
+        background: var(--primary);
+        color: var(--black);
+        padding: 0.85rem 1.75rem;
         border-radius: 8px;
-        text-decoration: none !important;
-        font-weight: 600;
+        text-decoration: none;
+        font-weight: 800;
         transition: all 0.2s;
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        box-shadow: 0 4px 15px rgba(255, 183, 3, 0.3);
     }
 
     .empty-state a:hover {
-        background: var(--primary-hover) !important;
+        background: var(--primary-hover);
         transform: translateY(-2px);
     }
 
     @@media (max-width: 768px) {
-        .container-marketplace { padding: 2rem 1rem !important; }
-        .marketplace-header { flex-direction: column; align-items: stretch; }
-        .marketplace-header h1 { font-size: 1.75rem; }
-        .btn-list-product { text-align: center; }
-        .search-bar { flex-direction: column; }
-        .products-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1.5rem; }
-        .product-image-wrapper { height: 160px; }
-        .product-info { padding: 1rem; }
+        .container-marketplace { padding: 2rem 1.5rem; }
+        .marketplace-header { flex-direction: column; align-items: stretch; gap: 1.5rem;}
+        .marketplace-header h1 { font-size: 2rem; text-align: center;}
+        .btn-list-product { text-align: center; justify-content: center; display: flex;}
+        .search-bar { flex-direction: column; padding: 1.5rem; }
+        .search-input { border-radius: 8px 8px 0 0; }
+        .btn-search { border-radius: 0 0 8px 8px; padding: 1rem; }
+        .products-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.5rem; }
+        .results-info { flex-direction: column; gap: 1rem; text-align: center; }
+        .gif-bg-light { width: 100vw; }
+        .gif-bg-light::after { display: none; }
     }
 
     @@media (max-width: 480px) {
-        .products-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; }
-        .product-image-wrapper { height: 140px; }
-        .product-img-placeholder { font-size: 2rem; }
-        .product-info { padding: 0.75rem; gap: 0.5rem; }
-        .product-name { font-size: 0.9rem; }
-        .product-price { font-size: 1.1rem; }
-        .view-product-btn { padding: 0.4rem 0.75rem !important; font-size: 0.75rem; }
+        .products-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+        .product-image-wrapper { height: 220px; }
     }
 </style>
+
+<div class="gif-bg-light"></div>
 
 <div class="container-marketplace">
     <div class="marketplace-header">
@@ -486,15 +555,15 @@
             <h1>
                 @if (!string.IsNullOrEmpty(Model.SearchQuery))
                 {
-                    <span>Search Results for "<span style="color:var(--primary)">@Model.SearchQuery</span>"</span>
+                    <span>Search Results for "<span style="color:var(--primary-hover)">@Model.SearchQuery</span>"</span>
                 }
                 else if (!string.IsNullOrEmpty(Model.Category))
                 {
-                    <span><span style="color:var(--primary)">@Model.Category</span> Products</span>
+                    <span><span style="color:var(--primary-hover)">@Model.Category</span> Products</span>
                 }
                 else
                 {
-                    <span>Browse Our <span style="color:var(--primary)">Marketplace</span></span>
+                    <span>Browse Our <span style="color:var(--primary-hover)">Marketplace</span></span>
                 }
             </h1>
         </div>
@@ -510,9 +579,9 @@
         <div class="search-input-wrapper">
             <form method="get" asp-controller="Home" asp-action="Index">
                 <input class="search-input" type="search" name="search"
-                       placeholder="Search products, categories..." value="@Model.SearchQuery" style="border-radius:8px 0 0 8px; flex:1;" />
-                <button class="btn-search" type="submit" style="border-radius:0 8px 8px 0;">
-                    <i class="fa-solid fa-magnifying-glass"></i>
+                       placeholder="Search products, categories, electronics..." value="@Model.SearchQuery" />
+                <button class="btn-search" type="submit">
+                    <i class="fa-solid fa-magnifying-glass me-2"></i> Search
                 </button>
             </form>
         </div>
@@ -584,7 +653,6 @@
             @foreach (var product in Model.Products)
             {
                 <div class="product-card">
-                    <!-- Front side -->
                     <div class="product-card-front">
                         <div class="product-image-wrapper">
                             <a asp-controller="Products" asp-action="Details" asp-route-id="@product.Id" style="display: contents;">
@@ -605,7 +673,7 @@
                             <a asp-controller="Products" asp-action="Details"
                                asp-route-id="@product.Id" class="product-name">@product.Name</a>
                             <p class="product-desc">
-                                @(string.IsNullOrEmpty(product.Description) ? "No description" : 
+                                @(string.IsNullOrEmpty(product.Description) ? "No description provided." : 
                                     (product.Description.Length > 75
                                         ? product.Description[..75] + "..."
                                         : product.Description))
@@ -623,7 +691,6 @@
                         </div>
                     </div>
 
-                    <!-- Back side -->
                     <div class="product-card-back">
                         <h3>Quick Look</h3>
                         <p>
@@ -634,7 +701,7 @@
                                 <i class="fa-solid fa-arrow-right"></i> View Details
                             </a>
                             <button type="button" class="product-card-back-btn secondary" onclick="addToCart(@product.Id)">
-                                <i class="fa-solid fa-shopping-cart"></i> Add to Cart
+                                <i class="fa-solid fa-cart-plus"></i> Add to Cart
                             </button>
                         </div>
                     </div>
@@ -646,8 +713,6 @@
 
 <script>
     function addToCart(productId) {
-        // Send product to cart (basic implementation)
         alert(`Product ${productId} added to cart!`);
-        // In a real app, you would send this to the server or update a cart session
     }
 </script>

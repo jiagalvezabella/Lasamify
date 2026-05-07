@@ -8,27 +8,61 @@
     :root {
         --primary: #FFB703; 
         --primary-hover: #FF9E00;
-        --primary-light: #FFF4D6;
         --black: #0B0F19; 
-        --dark: #1C2434;
         --gray: #64748B;
-        --light-border: #E2E8F0;
-        --bg-light: #F8FAFC;
         --white: #FFFFFF;
+        --bg-light: #F8FAFC;
+        --glass-bg: rgba(255, 255, 255, 0.80);
+        --glass-border: rgba(255, 255, 255, 0.5);
+        --glass-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+        font-family: 'DM Sans', sans-serif;
+        color: var(--black);
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        min-height: 100vh;
+    }
+
+    .bg-light-gif-container {
+        position: fixed;
+        top: 0; left: 0; width: 100vw; height: 100vh;
+        z-index: -1;
+        display: flex;
+    }
+
+    .bg-light-gif-left {
+        width: 50%; height: 100%;
+        background: url('/images/light-bg3.gif') top left;
+        background-size: 100% auto;
+        background-repeat: repeat-y;
+    }
+
+    .bg-light-gif-right {
+        width: 50%; height: 100%;
+        background: url('/images/light-bg3.gif') top left;
+        background-size: 100% auto;
+        background-repeat: repeat-y;
+        transform: scaleX(-1);
     }
 
     .create-container {
         max-width: 700px;
         margin: 3rem auto;
         padding: 0 2rem;
+        position: relative;
+        z-index: 1;
     }
 
     .form-card {
-        background: var(--white);
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
         border-radius: 12px;
-        border: 1px solid var(--light-border);
+        border: 1px solid var(--glass-border);
         padding: 3rem;
-        box-shadow: 0 20px 40px rgba(11, 15, 25, 0.08);
+        box-shadow: var(--glass-shadow);
     }
 
     .form-header {
@@ -47,6 +81,7 @@
     .form-header p {
         color: var(--gray);
         font-size: 1rem;
+        font-weight: 600;
     }
 
     .form-group {
@@ -55,10 +90,12 @@
 
     .form-label {
         display: block;
-        font-weight: 600;
+        font-weight: 700;
         color: var(--black);
         margin-bottom: 0.5rem;
         font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
     .required {
@@ -71,12 +108,12 @@
     .form-select {
         width: 100%;
         padding: 0.875rem 1rem;
-        border: 1px solid var(--light-border);
+        border: 1px solid rgba(0, 0, 0, 0.1);
         border-radius: 8px;
         font-family: 'DM Sans', sans-serif;
         font-size: 1rem;
         transition: border-color 0.2s, box-shadow 0.2s;
-        background: var(--white);
+        background: rgba(255, 255, 255, 0.8);
         color: var(--black);
     }
 
@@ -85,13 +122,13 @@
     .form-select:focus {
         outline: none;
         border-color: var(--primary);
-        box-shadow: 0 0 0 3px rgba(255, 183, 3, 0.1);
+        box-shadow: 0 0 0 3px rgba(255, 183, 3, 0.2);
+        background: var(--white);
     }
 
     .form-textarea {
         resize: vertical;
         min-height: 120px;
-        font-family: 'DM Sans', sans-serif;
     }
 
     .form-row {
@@ -100,17 +137,12 @@
         gap: 1.5rem;
     }
 
-    .form-helper {
-        font-size: 0.8rem;
-        color: var(--gray);
-        margin-top: 0.35rem;
-    }
-
     .validation-error {
         color: #EF4444;
         font-size: 0.8rem;
         margin-top: 0.35rem;
         display: block;
+        font-weight: 600;
     }
 
     .btn-primary {
@@ -120,18 +152,18 @@
         padding: 1rem;
         border: none;
         border-radius: 8px;
-        font-weight: 700;
-        font-size: 1rem;
+        font-weight: 800;
+        font-size: 1.05rem;
         cursor: pointer;
         transition: all 0.2s;
-        box-shadow: 0 4px 14px rgba(255, 183, 3, 0.4);
+        box-shadow: 0 4px 14px rgba(255, 183, 3, 0.3);
         margin-top: 1rem;
     }
 
     .btn-primary:hover {
         background: var(--primary-hover);
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(255, 183, 3, 0.5);
+        box-shadow: 0 6px 20px rgba(255, 183, 3, 0.4);
     }
 
     .file-input-wrapper {
@@ -142,13 +174,13 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 0.75rem;
-        padding: 2rem;
-        border: 2px dashed var(--light-border);
-        border-radius: 8px;
+        gap: 1.25rem;
+        padding: 2.5rem;
+        border: 2px dashed rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
         cursor: pointer;
         transition: all 0.2s;
-        background: var(--bg-light);
+        background: rgba(255, 255, 255, 0.5);
     }
 
     .file-input-custom:hover {
@@ -160,16 +192,15 @@
         display: none;
     }
 
-    .alert {
+    .alert-error {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        color: #991B1B;
         padding: 1rem;
         border-radius: 8px;
         margin-bottom: 1.5rem;
-    }
-
-    .alert-error {
-        background: rgba(239, 68, 68, 0.1);
-        border: 1px solid rgba(239, 68, 68, 0.3);
-        color: #991B1B;
+        font-size: 0.9rem;
+        font-weight: 600;
     }
 
     .alert-error ul {
@@ -179,11 +210,18 @@
 
     @@media (max-width: 640px) {
         .create-container { padding: 0 1rem; }
-        .form-card { padding: 1.5rem; }
-        .form-header h1 { font-size: 1.5rem; }
-        .form-row { grid-template-columns: 1fr; }
+        .form-card { padding: 2rem 1.5rem; }
+        .form-header h1 { font-size: 1.75rem; }
+        .form-row { grid-template-columns: 1fr; gap: 0; }
+        .bg-light-gif-container { flex-direction: column; }
+        .bg-light-gif-left, .bg-light-gif-right { width: 100%; height: 50%; }
     }
 </style>
+
+<div class="bg-light-gif-container">
+    <div class="bg-light-gif-left"></div>
+    <div class="bg-light-gif-right"></div>
+</div>
 
 <div class="create-container">
     <div class="form-card">
@@ -194,7 +232,7 @@
 
         @if (ViewData.ModelState.ErrorCount > 0)
         {
-            <div class="alert alert-error">
+            <div class="alert-error">
                 <ul>
                     @foreach (var modelState in ViewData.ModelState.Values)
                     {
@@ -214,7 +252,7 @@
                 <label class="form-label" for="name">
                     Product Name <span class="required">*</span>
                 </label>
-                <input asp-for="Name" type="text" class="form-input" id="name" placeholder="e.g. iPhone 13 Pro, Vintage Sofa" />
+                <input asp-for="Name" type="text" class="form-input" id="name" placeholder="e.g. iPhone 13 Pro, Vintage Sofa" required />
                 <span asp-validation-for="Name" class="validation-error"></span>
             </div>
 
@@ -229,14 +267,14 @@
                     <label class="form-label" for="price">
                         Price (₱) <span class="required">*</span>
                     </label>
-                    <input asp-for="Price" type="number" step="0.01" min="0.01" class="form-input" id="price" placeholder="0.00" />
+                    <input asp-for="Price" type="number" step="0.01" min="0.01" class="form-input" id="price" placeholder="0.00" required />
                     <span asp-validation-for="Price" class="validation-error"></span>
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="stock">
                         Quantity in Stock <span class="required">*</span>
                     </label>
-                    <input asp-for="Stock" type="number" min="1" class="form-input" id="stock" placeholder="1" />
+                    <input asp-for="Stock" type="number" min="1" class="form-input" id="stock" placeholder="1" required />
                     <span asp-validation-for="Stock" class="validation-error"></span>
                 </div>
             </div>
@@ -254,13 +292,13 @@
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="image">Product Image</label>
+                <label class="form-label">Product Image</label>
                 <div class="file-input-wrapper">
                     <label for="image" class="file-input-custom">
-                        <i class="fa-solid fa-cloud-arrow-up" style="color: var(--primary); font-size: 1.5rem;"></i>
+                        <i class="fa-solid fa-cloud-arrow-up" style="color: var(--primary); font-size: 2rem;"></i>
                         <div>
-                            <div style="font-weight: 600; color: var(--black);">Click to upload an image</div>
-                            <div style="font-size: 0.85rem; color: var(--gray);">JPG, PNG, GIF, WEBP (Max 5MB)</div>
+                            <div style="font-weight: 800; color: var(--black); font-size: 1rem;">Click to upload an image</div>
+                            <div style="font-size: 0.85rem; color: var(--gray); font-weight: 600;">JPG, PNG, GIF, WEBP (Max 5MB)</div>
                         </div>
                     </label>
                     <input asp-for="Image" type="file" id="image" accept="image/*" />
