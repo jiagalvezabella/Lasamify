@@ -74,9 +74,15 @@ namespace Lasamify.Models
 
         public decimal TotalAmount { get; set; }
 
-        public string Status { get; set; } = "Pending"; // Pending, Completed, Cancelled
+        public string Status { get; set; } = "Pending"; // Pending, Accepted, Rejected, Completed, Cancelled
+
+        public string? SellerStatus { get; set; } = "Pending"; // Pending, Accepted, Rejected
 
         public DateTime TransactionDate { get; set; } = DateTime.UtcNow;
+
+        public DateTime? SellerResponseDate { get; set; }
+
+        public string? ReceiptPath { get; set; }
     }
 
     public class Review

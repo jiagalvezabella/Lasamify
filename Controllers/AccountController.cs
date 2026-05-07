@@ -106,8 +106,11 @@ namespace Lasamify.Controllers
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var user = await _context.Users
                 .Include(u => u.Products)
+                    .ThenInclude(p => p.Transactions)
+                        .ThenInclude(t => t.Buyer)
                 .Include(u => u.BuyerTransactions)
                     .ThenInclude(t => t.Product)
+                        .ThenInclude(p => p.Seller)
                 .FirstOrDefaultAsync(u => u.Id == userId);
 
             return View(user);

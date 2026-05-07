@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using System.Text;
 using Lasamify.Data;
 using Lasamify.Models;
 
@@ -217,6 +218,214 @@ namespace Lasamify.Controllers
 
             TempData["Success"] = "Thank you for your review!";
             return RedirectToAction("Details", new { id = productId });
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AcceptOrder(int transactionId)
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var transaction = await _context.Transactions
+                .Include(t => t.Product)
+                .FirstOrDefaultAsync(t => t.Id == transactionId);
+
+            if (transaction == null)
+            {
+                TempData["Error"] = "Order not found.";
+                return RedirectToAction("Profile", "Account");
+            }
+
+            // Verify seller owns the product
+            if (transaction.Product?.SellerId != userId)
+            {
+                TempData["Error"] = "You don't have permission to accept this order.";
+                return RedirectToAction("Profile", "Account");
+            }
+
+            transaction.SellerStatus = "Accepted";
+            transaction.Status = "Accepted";
+            transaction.SellerResponseDate = DateTime.UtcNow;
+
+            _context.Transactions.Update(transaction);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Order accepted successfully!";
+            return RedirectToAction("Profile", "Account");
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RejectOrder(int transactionId)
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var transaction = await _context.Transactions
+                .Include(t => t.Product)
+                .FirstOrDefaultAsync(t => t.Id == transactionId);
+
+            if (transaction == null)
+            {
+                TempData["Error"] = "Order not found.";
+                return RedirectToAction("Profile", "Account");
+            }
+
+            // Verify seller owns the product
+            if (transaction.Product?.SellerId != userId)
+            {
+                TempData["Error"] = "You don't have permission to reject this order.";
+                return RedirectToAction("Profile", "Account");
+            }
+
+            transaction.SellerStatus = "Rejected";
+            transaction.Status = "Rejected";
+            transaction.SellerResponseDate = DateTime.UtcNow;
+
+            // Restore stock
+            if (transaction.Product != null)
+            {
+                transaction.Product.Stock += transaction.Quantity;
+                if (!transaction.Product.IsAvailable)
+                {
+                    transaction.Product.IsAvailable = true;
+                }
+                _context.Products.Update(transaction.Product);
+            }
+
+            _context.Transactions.Update(transaction);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Order rejected and stock restored.";
+            return RedirectToAction("Profile", "Account");
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GenerateReceipt(int transactionId)
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var transaction = await _context.Transactions
+                .Include(t => t.Buyer)
+                .Include(t => t.Product)
+                    .ThenInclude(p => p!.Seller)
+                .FirstOrDefaultAsync(t => t.Id == transactionId);
+
+            if (transaction == null)
+            {
+                TempData["Error"] = "Transaction not found.";
+                return RedirectToAction("Profile", "Account");
+            }
+
+            // Check if user is buyer or seller
+            var isBuyer = transaction.BuyerId == userId;
+            var isSeller = transaction.Product?.SellerId == userId;
+
+            if (!isBuyer && !isSeller)
+            {
+                TempData["Error"] = "You don't have permission to view this receipt.";
+                return RedirectToAction("Profile", "Account");
+            }
+
+            // Create a view model for the receipt
+            var receiptVM = new
+            {
+                TransactionId = transaction.Id,
+                BuyerName = transaction.Buyer?.Username ?? "N/A",
+                BuyerEmail = transaction.Buyer?.Email ?? "N/A",
+                SellerName = transaction.Product?.Seller?.Username ?? "N/A",
+                SellerEmail = transaction.Product?.Seller?.Email ?? "N/A",
+                ProductName = transaction.Product?.Name ?? "N/A",
+                ProductPrice = transaction.Product?.Price ?? 0,
+                Quantity = transaction.Quantity,
+                TotalAmount = transaction.TotalAmount,
+                Status = transaction.Status,
+                SellerStatus = transaction.SellerStatus,
+                TransactionDate = transaction.TransactionDate,
+                SellerResponseDate = transaction.SellerResponseDate
+            };
+
+            return View(receiptVM);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> DownloadReceipt(int transactionId)
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var transaction = await _context.Transactions
+                .Include(t => t.Buyer)
+                .Include(t => t.Product)
+                    .ThenInclude(p => p!.Seller)
+                .FirstOrDefaultAsync(t => t.Id == transactionId);
+
+            if (transaction == null)
+            {
+                TempData["Error"] = "Transaction not found.";
+                return RedirectToAction("Profile", "Account");
+            }
+
+            // Check if user is buyer or seller
+            var isBuyer = transaction.BuyerId == userId;
+            var isSeller = transaction.Product?.SellerId == userId;
+
+            if (!isBuyer && !isSeller)
+            {
+                TempData["Error"] = "You don't have permission to download this receipt.";
+                return RedirectToAction("Profile", "Account");
+            }
+
+            // Generate receipt content as CSV or text format
+            var receiptContent = GenerateReceiptContent(transaction);
+            var fileName = $"Receipt_{transaction.Id}_{DateTime.UtcNow:yyyyMMddHHmmss}.txt";
+
+            return File(Encoding.UTF8.GetBytes(receiptContent), "text/plain", fileName);
+        }
+
+        private string GenerateReceiptContent(Transaction transaction)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("═══════════════════════════════════════════");
+            sb.AppendLine("                    RECEIPT");
+            sb.AppendLine("═══════════════════════════════════════════");
+            sb.AppendLine();
+            sb.AppendLine($"Receipt #: {transaction.Id}");
+            sb.AppendLine($"Date: {transaction.TransactionDate:yyyy-MM-dd HH:mm:ss}");
+            sb.AppendLine();
+            sb.AppendLine("─────────────────────────────────────────");
+            sb.AppendLine("BUYER INFORMATION");
+            sb.AppendLine("─────────────────────────────────────────");
+            sb.AppendLine($"Name: {transaction.Buyer?.Username ?? "N/A"}");
+            sb.AppendLine($"Email: {transaction.Buyer?.Email ?? "N/A"}");
+            sb.AppendLine();
+            sb.AppendLine("─────────────────────────────────────────");
+            sb.AppendLine("SELLER INFORMATION");
+            sb.AppendLine("─────────────────────────────────────────");
+            sb.AppendLine($"Name: {transaction.Product?.Seller?.Username ?? "N/A"}");
+            sb.AppendLine($"Email: {transaction.Product?.Seller?.Email ?? "N/A"}");
+            sb.AppendLine();
+            sb.AppendLine("─────────────────────────────────────────");
+            sb.AppendLine("TRANSACTION DETAILS");
+            sb.AppendLine("─────────────────────────────────────────");
+            sb.AppendLine($"Product: {transaction.Product?.Name ?? "N/A"}");
+            sb.AppendLine($"Unit Price: ₱{transaction.Product?.Price:N2}");
+            sb.AppendLine($"Quantity: {transaction.Quantity}");
+            sb.AppendLine($"Total Amount: ₱{transaction.TotalAmount:N2}");
+            sb.AppendLine();
+            sb.AppendLine("─────────────────────────────────────────");
+            sb.AppendLine("ORDER STATUS");
+            sb.AppendLine("─────────────────────────────────────────");
+            sb.AppendLine($"Order Status: {transaction.Status}");
+            sb.AppendLine($"Seller Response: {transaction.SellerStatus ?? "Pending"}");
+            if (transaction.SellerResponseDate.HasValue)
+            {
+                sb.AppendLine($"Seller Response Date: {transaction.SellerResponseDate:yyyy-MM-dd HH:mm:ss}");
+            }
+            sb.AppendLine();
+            sb.AppendLine("═══════════════════════════════════════════");
+            sb.AppendLine("Thank you for your transaction!");
+            sb.AppendLine("═══════════════════════════════════════════");
+
+            return sb.ToString();
         }
     }
 }

@@ -431,9 +431,150 @@
                         }
                     </div>
                 </div>
-            }
 
-            @if (Model?.Role != "Seller")
+                <div class="content-section">
+                    <div class="section-header">
+                        <h3 class="section-title">
+                            <i class="fa-solid fa-box" style="color: var(--primary);"></i> Pending Orders
+                            <span style="color: var(--gray); font-size: 0.9rem; font-weight: 700;" id="pending-count"></span>
+                        </h3>
+                    </div>
+                    <div class="section-content">
+                        @{
+                            var pendingOrders = Model?.Products
+                                .SelectMany(p => p.Transactions)
+                                .Where(t => t.SellerStatus == "Pending" || t.SellerStatus == null)
+                                .OrderByDescending(t => t.TransactionDate)
+                                .ToList();
+                        }
+                        @if (pendingOrders?.Any() == true)
+                        {
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Order #</th>
+                                        <th>Product</th>
+                                        <th>Buyer</th>
+                                        <th>Quantity</th>
+                                        <th>Total Amount</th>
+                                        <th>Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var order in pendingOrders)
+                                    {
+                                        <tr>
+                                            <td style="font-weight: 800;">#@order.Id</td>
+                                            <td>@order.Product?.Name</td>
+                                            <td>
+                                                <span style="font-weight: 800;">@order.Buyer?.Username</span><br/>
+                                                <span style="color: var(--gray); font-size: 0.85rem;">@order.Buyer?.Email</span>
+                                            </td>
+                                            <td>@order.Quantity x</td>
+                                            <td><strong style="color: var(--primary-hover); font-weight: 900;">₱@order.TotalAmount.ToString("N2")</strong></td>
+                                            <td style="font-size: 0.85rem; color: var(--gray);">@order.TransactionDate.ToString("MMM dd, yyyy")</td>
+                                            <td>
+                                                <div style="display: flex; gap: 0.5rem;">
+                                                    <form method="post" asp-controller="Products" asp-action="AcceptOrder" asp-route-transactionId="@order.Id" style="display: inline;">
+                                                        @Html.AntiForgeryToken()
+                                                        <button type="submit" class="btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; display: flex; align-items: center; gap: 0.3rem;">
+                                                            <i class="fa-solid fa-check"></i> Accept
+                                                        </button>
+                                                    </form>
+                                                    <form method="post" asp-controller="Products" asp-action="RejectOrder" asp-route-transactionId="@order.Id" style="display: inline;" onsubmit="return confirm('Reject this order?');">
+                                                        @Html.AntiForgeryToken()
+                                                        <button type="submit" class="delete-btn" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; display: flex; align-items: center; gap: 0.3rem;">
+                                                            <i class="fa-solid fa-times"></i> Reject
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <div class="empty-state">
+                                <i class="fa-solid fa-inbox"></i>
+                                <h4 style="font-weight: 800; color: var(--black); margin-bottom: 0.5rem;">No pending orders</h4>
+                                <p style="font-weight: 600;">You'll see incoming orders here.</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <div class="section-header">
+                        <h3 class="section-title">
+                            <i class="fa-solid fa-check-circle" style="color: var(--primary);"></i> Accepted Orders
+                            <span style="color: var(--gray); font-size: 0.9rem; font-weight: 700;" id="accepted-count"></span>
+                        </h3>
+                    </div>
+                    <div class="section-content">
+                        @{
+                            var acceptedOrders = Model?.Products
+                                .SelectMany(p => p.Transactions)
+                                .Where(t => t.SellerStatus == "Accepted")
+                                .OrderByDescending(t => t.SellerResponseDate)
+                                .ToList();
+                        }
+                        @if (acceptedOrders?.Any() == true)
+                        {
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Order #</th>
+                                        <th>Product</th>
+                                        <th>Buyer</th>
+                                        <th>Quantity</th>
+                                        <th>Total Amount</th>
+                                        <th>Accepted Date</th>
+                                        <th>Receipt</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var order in acceptedOrders)
+                                    {
+                                        <tr>
+                                            <td style="font-weight: 800;">#@order.Id</td>
+                                            <td>@order.Product?.Name</td>
+                                            <td>
+                                                <span style="font-weight: 800;">@order.Buyer?.Username</span><br/>
+                                                <span style="color: var(--gray); font-size: 0.85rem;">@order.Buyer?.Email</span>
+                                            </td>
+                                            <td>@order.Quantity x</td>
+                                            <td><strong style="color: var(--primary-hover); font-weight: 900;">₱@order.TotalAmount.ToString("N2")</strong></td>
+                                            <td style="font-size: 0.85rem; color: var(--gray);">@order.SellerResponseDate?.ToString("MMM dd, yyyy") ?? "N/A"</td>
+                                            <td>
+                                                <a asp-controller="Products" asp-action="GenerateReceipt" asp-route-transactionId="@order.Id" class="btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 0.3rem; text-decoration: none;">
+                                                    <i class="fa-solid fa-file-pdf"></i> View
+                                                </a>
+                                                <form method="post" asp-controller="Products" asp-action="DownloadReceipt" asp-route-transactionId="@order.Id" style="display: inline;">
+                                                    @Html.AntiForgeryToken()
+                                                    <button type="submit" class="btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 0.3rem;">
+                                                        <i class="fa-solid fa-download"></i> Download
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <div class="empty-state">
+                                <i class="fa-solid fa-clipboard-check"></i>
+                                <h4 style="font-weight: 800; color: var(--black); margin-bottom: 0.5rem;">No accepted orders</h4>
+                                <p style="font-weight: 600;">Accept pending orders to see them here.</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
             {
                 <div class="content-section">
                     <div class="section-header">
@@ -451,7 +592,8 @@
                                         <th>Product</th>
                                         <th>Quantity</th>
                                         <th>Total</th>
-                                        <th>Status</th>
+                                        <th>Order Status</th>
+                                        <th>Seller Response</th>
                                         <th>Date</th>
                                         <th>Receipt</th>
                                     </tr>
@@ -468,17 +610,24 @@
                                                     @t.Status
                                                 </span>
                                             </td>
+                                            <td>
+                                                <span class="badge @(t.SellerStatus == "Accepted" ? "badge-success" : t.SellerStatus == "Rejected" ? "badge-warning" : "badge-warning")">
+                                                    @(t.SellerStatus ?? "Pending")
+                                                </span>
+                                            </td>
                                             <td style="font-size: 0.85rem; color: var(--gray);">@t.TransactionDate.ToString("MMM dd, yyyy")</td>
                                             <td>
-                                                <form method="post" enctype="multipart/form-data" 
-                                                      asp-controller="Account" asp-action="UploadTransactionReceipt"
-                                                      asp-route-transactionId="@t.Id" style="display: flex; gap: 0.5rem; align-items: center;">
-                                                    @Html.AntiForgeryToken()
-                                                    <input type="file" name="receipt" accept="image/*" style="padding: 0.25rem; font-size: 0.75rem; width: 140px;" />
-                                                    <button type="submit" class="btn-secondary" style="padding: 0.4rem 0.8rem; width: auto; font-size: 0.75rem;">
-                                                        <i class="fa-solid fa-upload"></i>
-                                                    </button>
-                                                </form>
+                                                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                                    <a asp-controller="Products" asp-action="GenerateReceipt" asp-route-transactionId="@t.Id" class="btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem;">
+                                                        <i class="fa-solid fa-file-pdf"></i> View
+                                                    </a>
+                                                    <form method="post" asp-controller="Products" asp-action="DownloadReceipt" asp-route-transactionId="@t.Id" style="display: inline;">
+                                                        @Html.AntiForgeryToken()
+                                                        <button type="submit" class="btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 0.3rem;">
+                                                            <i class="fa-solid fa-download"></i> Download
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </td>
                                         </tr>
                                     }
